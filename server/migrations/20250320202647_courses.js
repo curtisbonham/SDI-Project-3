@@ -6,8 +6,8 @@ exports.up = function(knex) {
   return knex.schema.createTable('courses', table => {
     table.increments();
     table.string('course_name');
-    table.string('start_date');
-    table.string('end_date');
+    table.date('start_date');
+    table.date('end_date');
     table.integer('cert_id');
     table.foreign('cert_id').references('id').inTable('certifications').onDelete('CASCADE');
   });

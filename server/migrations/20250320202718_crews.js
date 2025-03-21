@@ -5,10 +5,11 @@
 exports.up = function(knex) {
   return knex.schema.createTable('crews', table => {
     table.increments();
+    table.integer('crew_id');
     table.string('crew_name');
     table.string('position_name');
-    table.string('start_date');
-    table.string('end_date');
+    table.date('start_date');
+    table.date('end_date');
     table.integer('member_id');
     table.foreign('member_id').references('id').inTable('members').onDelete('CASCADE');
   });
