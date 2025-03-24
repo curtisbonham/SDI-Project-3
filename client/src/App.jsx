@@ -1,12 +1,12 @@
 import "./App.css";
 import {Link, Route, Routes} from 'react-router-dom'
 import { useState, useEffect } from "react";
-import Navbar from "./Navbar.jsx";
-import Home from './Home.jsx'
-import Members from './Members.jsx'
-import Courses from './Courses.jsx'
-import Crews from './Crews.jsx'
-import Positions from './Positions.jsx'
+import Navbar from "./Navbar/Navbar.jsx";
+import Home from './Home/Home.jsx'
+import Members from './Members/Members.jsx'
+import Courses from './Courses/Courses.jsx'
+import Crews from './Crews/Crews.jsx'
+import Positions from './Positions/Positions.jsx'
 
 function App() {
     const [members, setMembers] = useState([]); // Store data, not JSX

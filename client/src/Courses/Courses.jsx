@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import './Courses.css';
-import {Scheduler} from "@bitnoi.se/react-scheduler/dist/style.css";
+// import {Scheduler} from "@bitnoi.se/react-scheduler/dist/style.css";
 import CourseForm from './CourseForm.jsx'
 
 function Courses() {
