@@ -20,14 +20,14 @@ function CourseForm(){
         position: certifiedPosition,
     };
 }
-const response = fetch('http://localhost:3001/courses', {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(newCourse)
-})
+// const response = fetch('http://localhost:3001/courses', {
+//     method: 'POST',
+//     headers: {
+//       'Accept': 'application/json',
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify(newCourse)
+// })
 
 return(
     <div className='course-form-container'>

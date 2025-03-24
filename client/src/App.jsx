@@ -7,9 +7,12 @@ import Members from './Members/Members.jsx'
 import Courses from './Courses/Courses.jsx'
 import Crews from './Crews/Crews.jsx'
 import Positions from './Positions/Positions.jsx'
+import DetailsContext from './DetailsContext.jsx'
 
 function App() {
     const [members, setMembers] = useState([]); // Store data, not JSX
+
+    const value = {members, setMembers}
 
     useEffect(() => {
         fetch("http://localhost:3001/all")
@@ -22,6 +25,7 @@ function App() {
 
     return (
         <>
+        <DetailsContext.Provider value={value}>
             <Navbar />
             {/* <div>
                 {members.map((mem) => (
@@ -31,14 +35,14 @@ function App() {
                 ))}
             </div> */}
 
-						<Routes>
-            	<Route path='/' element={<Home/>}/>
-							<Route path='/members' element={<Members/>}/>
-							<Route path='/courses' element={<Courses/>}/>
-							<Route path='/crews' element={<Crews/>}/>
-							<Route path='/positions' element={<Positions/>}/>
+			<Routes>
+            	<Route path='/' element={<Home value={value}/>}/>
+                <Route path='/members' element={<Members value={value}/>} />
+                <Route path='/courses' element={<Courses/>}/>
+                <Route path='/crews' element={<Crews/>}/>
+                <Route path='/positions' element={<Positions/>}/>
           	</Routes>
-
+        </DetailsContext.Provider>
         </>
     );
 }

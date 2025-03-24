@@ -3,6 +3,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import React, { useEffect, useState } from "react";
 import './Members.css'
 
+<<<<<<< HEAD
 const App = () => {
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -40,6 +41,9 @@ const App = () => {
 
 
 function Members() {
+=======
+function Members({value}) {
+>>>>>>> a33bf8ae98022c3c2c366f2330443081c38e489a
 
     return(
         <div className='members-container'>
