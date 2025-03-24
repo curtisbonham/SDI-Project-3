@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import './Courses.css';
-// import {Scheduler} from "@bitnoi.se/react-scheduler/dist/style.css";
 import CourseForm from './CourseForm.jsx'
 
 function Courses() {
@@ -30,6 +29,7 @@ function Courses() {
 
   return (
     <div className='courses-container'>
+      <CourseForm />
       <div>
         {courses.map((crs) => {
           const formattedStartDate = new Date(crs.start_date).toLocaleDateString('en-US', {
