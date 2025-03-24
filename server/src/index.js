@@ -8,6 +8,7 @@ const cors = require("cors");
 const knex = require("knex")(require("../knexfile")["development"]);
 
 app.use(cors());
+app.use(express.json());
 
 if (!PORT) {
 	dotenv.config({ path: path.resolve(__dirname, "../.env") });
@@ -46,6 +47,58 @@ app.get('/courses', (req, res) => {
     });
 });
 
+app.post('/courses', (req, res) => {
+  const { course_name, start_date, end_date, cert_id } = req.body;
+
+  // Validate the input
+  if (!course_name || !start_date || !end_date || !cert_id) {
+    return res.status(400).json({
+      message: 'Missing required fields: course_name, start_date, end_date, or cert_id.',
+    });
+  }
+
+  // Insert the new course into the database
+  knex('courses')
+    .insert({ course_name, start_date, end_date, cert_id })
+    .returning('*') // Return the inserted course
+    .then((data) => {
+      res.status(201).json({
+        message: 'Course added successfully!',
+        course: data[0], // Return the inserted course
+      });
+    })
+    .catch((err) => {
+      console.error('Database insert error:', err);
+      res.status(500).json({
+        message: 'An error occurred while adding the course. Please try again later.',
+      });
+    });
+});
+
+app.delete('/courses/:id', (req, res) => {
+  const { id } = req.params;
+
+  knex('courses')
+    .where({ id })
+    .del()
+    .then((count) => {
+      if (count === 0) {
+        return res.status(404).json({
+          message: `Course with id ${id} not found.`,
+        });
+      }
+      res.status(200).json({
+        message: `Course with id ${id} deleted successfully.`,
+      });
+    })
+    .catch((err) => {
+      console.error('Database delete error:', err);
+      res.status(500).json({
+        message: 'An error occurred while deleting the course. Please try again later.',
+      });
+    });
+});
+
 app.get('/members/courses', (req, res) => {
   knex('members')
 		.join('intermediate', 'members.id', '=', 'member_id')
@@ -64,9 +117,10 @@ app.get('/members/courses', (req, res) => {
 
 app.get('/courses/certs', (req, res) => {
   knex('courses')
-		.join('intermediate', 'courses.id', '=', 'intermediate.course_id')
-		.join('certifications', 'intermediate.cert_id','=' , 'certifications.id')
-    .select('*')
+    .join('intermediate', 'courses.id', '=', 'intermediate.course_id')
+    .join('certifications', 'intermediate.cert_id', '=', 'certifications.id')
+    .select('courses.id as course_id', 'certifications.id as c_id', 'courses.cert_id', 'course_name', 'start_date', 'end_date', 'position')
+    .orderBy('position')
     .then(data => {
       res.status(200).json(data);
     })
