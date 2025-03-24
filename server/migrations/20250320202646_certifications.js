@@ -5,7 +5,7 @@
 exports.up = function(knex) {
   return knex.schema.createTable('certifications', table => {
     table.increments();
-    table.string('position_name');
+    table.string('position');
   });
 };
 
