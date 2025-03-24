@@ -1,14 +1,20 @@
-# What image do you want to start building on?
+# Use the official Node.js image as a base
 FROM node:20-alpine
-# Make a folder in your image where your app's source code can live
 
-# Tell your container where your app's source code will live
+# Set the working directory in the container
 WORKDIR /src/app
-# What source code do you what to copy, and where to put it?
-COPY . /src/app
-# What port will the container talk to the outside world with once created?
-EXPOSE 3000
-# Does your app have any dependencies that should be installed?
+
+# Copy only package.json and package-lock.json first to install dependencies
+COPY package.json package-lock.json ./
+
+# Install dependencies
 RUN npm install
-# How do you start your app?
-CMD npm run dev
+
+# Copy the rest of the files
+COPY . ./
+
+# Expose the app port (usually for frontend apps)
+EXPOSE 3000
+
+# Start the app in development mode
+CMD ["npm", "run", "dev"]
