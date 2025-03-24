@@ -1,4 +1,10 @@
-import { IconButton, Button, TextField, Badge} from "@mui/material";
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 // import HomeIcon from '@mui/icons-material/Home';
 import React, { useEffect, useState } from "react";
 import './Members.css'
@@ -24,59 +30,42 @@ const Members = () => {
     fetchData()
   }, []);
 
-
-  //   fetch("http://localhost:3001/members")
-  //   .then((res) => res.json())
-  //   .then((data) => {
-  //     setMembers(data);
-  //     setLoading(false);
-  //     console.log(data);
-  //    })
-  //    .catch((err) => {
-  //     console.error("Failed to fetch members:", err);
-  //     setLoading(false);
-  //    });
-  //  }, []);
-
-  //  return (
-  //   <div>
-  //     <h1>Members</h1>
-  //     {loading ? (
-  //       <p>Loading...</p>
-  //     ) : (
-  //       members.map((member) => (
-  //         <div key={member.id} style={{ marginBottom: "1rem" }}>
-  //           <strong>ID:</strong> {member.id} <br />
-  //           <strong>Name:</strong> {member.name} <br />
-  //           <strong>Rank:</strong> {member.rank}
-  //         </div>
-  //       ))
-  //     )}
-  //   </div>
-  // );
-
-
   return (
     <div className="members-container">
-      <h1>Members Page</h1>
+      <h1>Members Table</h1>
 
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <div>
-          {members.map((member) => (
-            <div key={member.id} className="member-card">
-              <p><strong>ID:</strong> {member.id}</p>
-              <p><strong>Name:</strong> {member.name}</p>
-              <p><strong>Rank:</strong> {member.rank}</p>
-              <hr />
-            </div>
-          ))}
-        </div>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Member ID</TableCell>
+                <TableCell align="right">Rank</TableCell>
+                <TableCell align="right">Name</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {members.map((member) => (
+                <TableRow
+                  key={member.id}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell component="th" scope="row">
+                    {member.id}
+                  </TableCell>
+                  <TableCell align="right">{member.rank}</TableCell>
+                  <TableCell align="right">{member.name}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       )}
     </div>
   );
-}
+};
 
 
 export default Members;
