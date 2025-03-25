@@ -33,6 +33,76 @@ app.get('/members', (req, res) => {
     });
 });
 
+// Add post for members
+
+app.post('/members', (req, res) => {
+  const { name, rank } = req.body;
+
+  if (!name || !rank) {
+    return res.status(400).json({
+      message: 'Missing required fields: name or rank.',
+    });
+  }
+
+  knex('members')
+    .insert({ name, rank })
+    .returning('*')
+    .then((data) => {
+      res.status(201).json({
+        message: 'Member added successfully!',
+        member: data[0], // the new member
+      });
+    })
+    .catch((err) => {
+      console.error('Database insert error:', err);
+      res.status(500).json({
+        message: 'An error occurred while adding the member. Please try again later.',
+      });
+    });
+});
+
+
+// end of post for members
+
+
+// put for members
+app.put('/members', (req, res) => {
+  const {id, name, rank } = req.body; // Get new values from request body
+
+  // Validate the required fields
+  if (!id || !name || !rank) {
+    return res.status(400).json({
+      message: 'Missing required fields: memberId, name, or rank.',
+    });
+  }
+
+  // Update the member in the database
+  knex('members')
+    .where('id', id) // Find member by memberId
+    .update({ name, rank }) // Update name and rank
+    .returning('*') // Return the updated member data (optional)
+    .then((data) => {
+      if (data.length === 0) {
+        return res.status(404).json({
+          message: 'Member not found',
+        });
+      }
+
+      res.status(200).json({
+        message: 'Member updated successfully!',
+        data: data[0], // Return the updated member data
+      });
+    })
+    .catch((err) => {
+      console.error('Database update error:', err);
+      res.status(500).json({
+        message: 'An error occurred while updating the member. Please try again later.',
+      });
+    });
+});
+//member put end
+
+
 app.get('/courses', (req, res) => {
   knex('courses')
     .select('*')
