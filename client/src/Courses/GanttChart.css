@@ -1,0 +1,16 @@
+.gantt-chart-container {
+  width: 100%; /* Ensure the container takes up the full width */
+  height: 400px; /* Set a fixed height for the container */
+  overflow-x: auto; /* Allow horizontal scrolling if the chart overflows */
+  overflow-y: auto; /* Prevent vertical overflow */
+  position: relative; /* Ensure proper positioning */
+  background-color: white; /* Set a white background to remove the black bar */
+  border: 1px solid #ddd; /* Optional: Add a border for better visibility */
+}
+
+.gantt-chart {
+  width: 100%; /* Ensure the chart takes up the full width of the container */
+  height: 100%; /* Ensure the chart takes up the full height of the container */
+  margin: 0; /* Remove any default margins */
+  padding: 0; /* Remove any default padding */
+}
