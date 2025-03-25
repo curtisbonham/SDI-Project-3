@@ -33,7 +33,7 @@ app.get('/members', (req, res) => {
     });
 });
 
-// Add post for members
+// POST new members
 
 app.post('/members', (req, res) => {
   const { name, rank } = req.body;
@@ -63,10 +63,10 @@ app.post('/members', (req, res) => {
 });
 
 
-// end of post for members
+// end of POST new members
 
 
-// put for members
+// PUT new members
 app.put('/members', (req, res) => {
   const {id, name, rank } = req.body; // Get new values from request body
 
@@ -101,7 +101,34 @@ app.put('/members', (req, res) => {
       });
     });
 });
-//member put end
+//END of PUT new Members
+
+// DELETE member
+app.delete('/members/:id', (req, res) => {
+  const { id } = req.params;
+
+  knex('members')
+    .where({ id })
+    .del()
+    .then((count) => {
+      if (count === 0) {
+        return res.status(404).json({
+          message: `Member with id ${id} not found.`,
+        });
+      }
+      res.status(200).json({
+        message: `Member with id ${id} deleted successfully.`,
+      });
+    })
+    .catch((err) => {
+      console.error('Database delete error:', err);
+      res.status(500).json({
+        message: 'An error occurred while deleting the member. Please try again later.',
+      });
+    });
+});
+
+// END DELETE member
 
 
 app.get('/courses', (req, res) => {
