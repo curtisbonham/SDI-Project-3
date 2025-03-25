@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
 import './Courses.css';
 import CourseForm from './CourseForm.jsx';
-import GanttChart from './GanttChart.jsx'
+import GanttChart from './GanttChart.jsx';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from "@mui/material";
-// import { Chart } from 'react-google-charts';
 
 function Courses() {
   const [courses, setCourses] = useState([]);
-  const [open, setOpen] = useState(false); // State to control the dialog
+  const [open, setOpen] = useState(false); // State to control the delete dialog
   const [selectedCourseId, setSelectedCourseId] = useState(null); // State to store the course ID to delete
+  const [isModalOpen, setIsModalOpen] = useState(false); // State to control the course form modal
 
   useEffect(() => {
     fetchCourses();
@@ -38,11 +38,11 @@ function Courses() {
 
   const handleOpen = (id) => {
     setSelectedCourseId(id); // Set the course ID to delete
-    setOpen(true); // Open the dialog
+    setOpen(true); // Open the delete dialog
   };
 
   const handleClose = () => {
-    setOpen(false); // Close the dialog
+    setOpen(false); // Close the delete dialog
     setSelectedCourseId(null); // Clear the selected course ID
   };
 
@@ -63,6 +63,9 @@ function Courses() {
       console.error('Error deleting course:', err);
     }
   };
+
+  const openModal = () => setIsModalOpen(true); // Open the course form modal
+  const closeModal = () => setIsModalOpen(false); // Close the course form modal
 
   // Prepare data for the Gantt chart
   const ganttData = [
@@ -88,8 +91,6 @@ function Courses() {
     ]),
   ];
 
-  console.log(ganttData)
-
   const ganttOptions = {
     height: 400,
     gantt: {
@@ -100,57 +101,71 @@ function Courses() {
   return (
     <div className='courses-container'>
       <div className='gantt-chart-container'>
-      <GanttChart ganttData={ganttData} ganttOptions={ganttOptions}/><br/>
+        <GanttChart ganttData={ganttData} ganttOptions={ganttOptions} /><br />
       </div>
-      <div className='course-form-container'>
-      <CourseForm fetchCourses={fetchCourses} />
-      </div>
-      <div>
-        <div className="course-information-container">
-          <h2>Courses Information</h2>
-          <table className="courses-table">
-            <thead>
-              <tr>
-                <th>Course Name</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Certified Position</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {courses.map((crs) => {
-                const formattedStartDate = new Date(crs.start_date).toLocaleDateString('en-US', {
-                  day: 'numeric',
-                  month: 'long',
-                  year: 'numeric',
-                });
 
-                const formattedEndDate = new Date(crs.end_date).toLocaleDateString('en-US', {
-                  day: 'numeric',
-                  month: 'long',
-                  year: 'numeric',
-                });
+      {/* Add Course Button */}
+      <button className="add-course-btn" onClick={openModal}>
+        Add Course
+      </button>
 
-                return (
-                  <tr key={crs.id}>
-                    <td>{crs.course_name}</td>
-                    <td>{formattedStartDate}</td>
-                    <td>{formattedEndDate}</td>
-                    <td>{crs.position}</td>
-                    <td>
-                      <IconButton onClick={() => handleOpen(crs.id)}>
-                        <DeleteForeverIcon />
-                      </IconButton>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+      {/* Modal for Course Form */}
+      {isModalOpen && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+
+            <h3>Add Course</h3>
+            <CourseForm fetchCourses={fetchCourses} />
+            <button className="close-modal-btn" onClick={closeModal}>
+              Close
+            </button>
+          </div>
         </div>
-      </div>
+      )}
 
+      <div className="course-information-container">
+        <h2>Courses Information</h2>
+        <table className="courses-table">
+          <thead>
+            <tr>
+              <th>Course Name</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Certified Position</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {courses.map((crs) => {
+              const formattedStartDate = new Date(crs.start_date).toLocaleDateString('en-US', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+              });
+
+              const formattedEndDate = new Date(crs.end_date).toLocaleDateString('en-US', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+              });
+
+              return (
+                <tr key={crs.id}>
+                  <td>{crs.course_name}</td>
+                  <td>{formattedStartDate}</td>
+                  <td>{formattedEndDate}</td>
+                  <td>{crs.position}</td>
+                  <td>
+                    <IconButton onClick={() => handleOpen(crs.id)}>
+                      <DeleteForeverIcon />
+                    </IconButton>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
 
       {/* Dialog for confirmation */}
       <Dialog open={open} onClose={handleClose}>
@@ -170,7 +185,6 @@ function Courses() {
         </DialogActions>
       </Dialog>
     </div>
-
   );
 }
 
