@@ -96,6 +96,18 @@ export default function CustomTable({ arr, api }) {
 
   const paginationModel = { page: 0, pageSize: 10 };
 
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this member?")) return;
+  
+    try {
+      await axios.delete(`${api}/${id}`);
+      setRows(prevRows => prevRows.filter(row => row.id !== id));
+    } catch (error) {
+      console.error('Error deleting member:', error);
+      alert("Failed to delete member.");
+    }
+  };
+  
   return (
     <>
       {/* Dynamically create input fields for each property excluding 'id' */}
