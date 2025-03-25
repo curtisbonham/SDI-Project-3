@@ -1,3 +1,120 @@
-.courses-container{
-  margin-top: 300px; 
+.courses-container {
+  margin-top: 200px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 20px;
+}
+
+.gantt-chart-container {
+  grid-column: 1/ span 3;
+  width: 100%;
+  height: 400px; /* Set a fixed height */
+  display: block; /* Ensure the container is displayed */
+  margin: 0 auto; /* Center the container */
+  background-color: #f9f9f9; /* Optional: Add a background color for debugging */
+  justify-items: center;
+}
+
+.course-form-container {
+  grid-column: 1;
+  width: 100%;
+  margin-top: 0;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid red;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+
+.course-form-container form {
+  width: 100%;
+  max-width: 400px;
+}
+
+.course-form-container input,
+.course-form-container select,
+.course-form-container button {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.course-form-container button {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.course-form-container button:hover {
+  background-color: #0056b3;
+}
+
+.course-information-container {
+  grid-column: 3;
+  width: 100%;
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid red;
+}
+
+.course-information-container h2 {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+
+/* Style the table */
+.courses-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 16px;
+  text-align: center; /* Align text to the left */
+}
+
+/* Style the table headers */
+.courses-table th {
+  background-color: #f4f4f4; /* Light gray background for headers */
+  font-weight: bold; /* Make header text bold */
+  border: 1px solid #ddd; /* Add a border to the header cells */
+  padding: 10px; /* Add padding inside the header cells */
+  text-align: left; /* Align header text to the left */
+}
+
+/* Style the table rows and cells */
+.courses-table td {
+  border: 1px solid #ddd; /* Add a border to the table cells */
+  padding: 10px; /* Add padding inside the cells */
+  vertical-align: middle; /* Align content vertically in the middle */
+}
+
+/* Add alternating row colors for better readability */
+.courses-table tr:nth-child(even) {
+  background-color: #f9f9f9; /* Light gray background for even rows */
+}
+
+/* Add hover effect for rows */
+.courses-table tr:hover {
+  background-color: #f1f1f1; /* Slightly darker gray background on hover */
+}
+
+/* Style the actions column (e.g., delete button) */
+.courses-table .icon-button {
+  cursor: pointer; /* Change cursor to pointer for clickable icons */
+  color: #d32f2f; /* Red color for delete icon */
+  transition: color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.courses-table .icon-button:hover {
+  color: #b71c1c; /* Darker red on hover */
 }

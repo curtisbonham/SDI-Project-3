@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import './Courses.css';
 import CourseForm from './CourseForm.jsx';
+import GanttChart from './GanttChart.jsx'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from "@mui/material";
+// import { Chart } from 'react-google-charts';
 
 function Courses() {
   const [courses, setCourses] = useState([]);
@@ -19,13 +21,9 @@ function Courses() {
         fetch("http://localhost:3001/courses/").then((res) => res.json()),
         fetch("http://localhost:3001/courses/certs").then((res) => res.json()),
       ]);
-      console.log("courses data:", coursesData)
-      console.log("certs data:", certsData)
+
       const mergedData = coursesData.map((course) => {
         const cert = certsData.find((cert) => cert.c_id === course.cert_id);
-
-        console.log('course.cert_id:', course.cert_id, 'cert.c_id:', cert ? cert.c_id : 'No cert found');
-
 
         return {
           ...course,
@@ -66,38 +64,93 @@ function Courses() {
     }
   };
 
+  // Prepare data for the Gantt chart
+  const ganttData = [
+    [
+      { type: "string", label: "Task ID" },
+      { type: "string", label: "Task Name" },
+      { type: "string", label: "Resource" },
+      { type: "date", label: "Start Date" },
+      { type: "date", label: "End Date" },
+      { type: "number", label: "Duration" },
+      { type: "number", label: "Percent Complete" },
+      { type: "string", label: "Dependencies" },
+    ],
+    ...courses.map((course) => [
+      `Course-${course.id}`,
+      course.course_name,
+      course.position,
+      new Date(course.start_date), // Start Date
+      new Date(course.end_date), // End Date
+      null,
+      null,
+      null
+    ]),
+  ];
+
+  console.log(ganttData)
+
+  const ganttOptions = {
+    height: 400,
+    gantt: {
+      trackHeight: 30,
+    },
+  };
+
   return (
     <div className='courses-container'>
-      <CourseForm fetchCourses={fetchCourses}/>
-      <div>
-        {courses.map((crs) => {
-          const formattedStartDate = new Date(crs.start_date).toLocaleDateString('en-US', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-          });
-
-          const formattedEndDate = new Date(crs.end_date).toLocaleDateString('en-US', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-          });
-
-          return (
-            <div key={crs.id} className="course-item">
-              <p>
-                <strong>Course Name:</strong> {crs.course_name} <br />
-                <strong>Start:</strong> {formattedStartDate} <br />
-                <strong>End:</strong> {formattedEndDate} <br />
-                <strong>Certified Position:</strong> {crs.position} <br />
-              </p>
-              <IconButton onClick={() => handleOpen(crs.id)}>
-                <DeleteForeverIcon />
-              </IconButton>
-            </div>
-          );
-        })}
+      <div className='gantt-chart-container'>
+      <GanttChart ganttData={ganttData} ganttOptions={ganttOptions}/><br/>
       </div>
+      <div className='course-form-container'>
+      <CourseForm fetchCourses={fetchCourses} />
+      </div>
+      <div>
+        <div className="course-information-container">
+          <h2>Courses Information</h2>
+          <table className="courses-table">
+            <thead>
+              <tr>
+                <th>Course Name</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Certified Position</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {courses.map((crs) => {
+                const formattedStartDate = new Date(crs.start_date).toLocaleDateString('en-US', {
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric',
+                });
+
+                const formattedEndDate = new Date(crs.end_date).toLocaleDateString('en-US', {
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric',
+                });
+
+                return (
+                  <tr key={crs.id}>
+                    <td>{crs.course_name}</td>
+                    <td>{formattedStartDate}</td>
+                    <td>{formattedEndDate}</td>
+                    <td>{crs.position}</td>
+                    <td>
+                      <IconButton onClick={() => handleOpen(crs.id)}>
+                        <DeleteForeverIcon />
+                      </IconButton>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
 
       {/* Dialog for confirmation */}
       <Dialog open={open} onClose={handleClose}>
@@ -117,6 +170,7 @@ function Courses() {
         </DialogActions>
       </Dialog>
     </div>
+
   );
 }
 
