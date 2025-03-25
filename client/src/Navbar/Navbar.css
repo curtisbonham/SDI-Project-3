@@ -11,7 +11,7 @@
     max-width: 100%;
     height: 100px;
     justify-content: space-between;
-    background-color: #2c3e50;
+    background-color:#36485E;
     /* padding: 20px 40px; */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -19,4 +19,21 @@
 .navBar-btn-container {
 display: flex;
 gap: 20px;
+}
+
+.navBar-container .navBar-btn {
+    border: 2px solid #9EFFA9;
+    background-color: #36485E;
+    color: white;
+    padding: 0.5rem 1rem;
+    /* border: none; */
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    
+  }
+  
+.navBar-btn:hover {
+ transform: scale(1.05); 
 }

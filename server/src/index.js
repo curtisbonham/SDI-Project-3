@@ -33,6 +33,20 @@ app.get('/members', (req, res) => {
     });
 });
 
+app.get('/crews', (req, res) => {
+  knex('crews')
+    .select('*')
+    .then(data => {
+      res.status(200).json(data);
+    })
+    .catch(err => {
+      console.error("Database query error:", err);
+      res.status(500).json({
+        message: 'An error occurred while fetching data. Please try again later.'
+      });
+    });
+});
+
 
 // POST new members
 
