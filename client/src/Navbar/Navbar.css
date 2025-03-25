@@ -22,13 +22,16 @@ gap: 20px;
 }
 
 .navBar-container .navBar-btn {
-    background-color: #131b24;
-    color: #9EFFA9;
+    border: 2px solid #9EFFA9;
+    background-color: #36485E;
+    color: white;
     padding: 0.5rem 1rem;
-    border: none;
+    /* border: none; */
     border-radius: 6px;
     cursor: pointer;
+    font-weight: bold;
     transition: background-color 0.3s ease;
+    
   }
   
 .navBar-btn:hover {
