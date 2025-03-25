@@ -37,6 +37,7 @@ const GanttChart = memo(({ courses }) => {
           end: course.end_date,
           progress: course.progress || 0,
           dependencies: course.dependencies || "",
+          custom_class: `cert_${course.cert_id}`,
         }));
 
       console.log("Validated tasks:", tasks);
