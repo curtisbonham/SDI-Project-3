@@ -57,13 +57,10 @@ function Courses() {
         console.warn("No valid tasks available for the Gantt chart.");
         return;
       }
-
-      // Initialize Frappé Gantt
       new Gantt(ganttContainer.current, tasks, {
         view_mode: "Day",
         date_format: "YYYY-MM-DD",
         custom_popup_html: (task) => {
-          // Custom popup for task details
           return `
             <div class="popup">
               <h5>${task.name}</h5>
@@ -83,11 +80,11 @@ function Courses() {
             fetch("http://localhost:3001/courses/").then((res) => res.json()),
             fetch("http://localhost:3001/courses/certs").then((res) => res.json()),
         ]);
-        console.log(certsData)
+        console.log("Courses Data:", coursesData); // Debugging log
+        console.log("Certifications Data:", certsData);
+
         const mergedData = coursesData.map((course) => {
             const cert = certsData.find((cert) => cert.c_id === course.cert_id);
-
-            // Ensure dates are treated as local dates
             return {
                 ...course,
                 start_date: course.start_date,
@@ -103,20 +100,20 @@ function Courses() {
 };
 
   const handleOpen = (id) => {
-    setSelectedCourseId(id); // Set the course ID to delete
-    setOpen(true); // Open the delete dialog
+    setSelectedCourseId(id);
+    setOpen(true);
   };
 
   const handleEdit = (id) => {
     const courseToEdit = courses.find((course) => course.id === id);
     setEdit(true);
     setSelectedCourse(courseToEdit);
-    setIsEditModalOpen(true); // Open the edit modal
+    setIsEditModalOpen(true);
   };
 
   const handleClose = () => {
-    setOpen(false); // Close the delete dialog
-    setSelectedCourseId(null); // Clear the selected course ID
+    setOpen(false);
+    setSelectedCourseId(null);
   };
 
   const handleEditClose = () => {
@@ -131,8 +128,8 @@ function Courses() {
       });
 
       if (response.ok) {
-        fetchCourses(); // Re-fetch courses after deletion
-        handleClose(); // Close the dialog
+        fetchCourses();
+        handleClose();
       } else {
         const errorData = await response.json();
         console.error(errorData.message || "Failed to delete the course.");
@@ -142,8 +139,8 @@ function Courses() {
     }
   };
 
-  const openModal = () => setIsModalOpen(true); // Open the course form modal
-  const closeModal = () => setIsModalOpen(false); // Close the course form modal
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
   const openEditModal = (id) => {
     const courseToEdit = courses.find((course) => course.id === id);
     setSelectedCourse(courseToEdit);
@@ -206,8 +203,8 @@ function Courses() {
               {courses.map((crs) => (
                 <tr key={crs.id}>
                   <td>{crs.course_name}</td>
-                  <td>{crs.start_date}</td> {/* Display the formatted start_date */}
-                  <td>{crs.end_date}</td> {/* Display the formatted end_date */}
+                  <td>{crs.start_date}</td>
+                  <td>{crs.end_date}</td>
                   <td>{crs.position}</td>
                   <td>
                     <IconButton onClick={() => handleOpen(crs.id)}>
