@@ -1,11 +1,12 @@
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+// import Table from '@mui/material/Table';
+// import TableBody from '@mui/material/TableBody';
+// import TableCell from '@mui/material/TableCell';
+// import TableContainer from '@mui/material/TableContainer';
+// import TableHead from '@mui/material/TableHead';
+// import TableRow from '@mui/material/TableRow';
+// import Paper from '@mui/material/Paper';
 // import HomeIcon from '@mui/icons-material/Home';
+import CustomTable from "../CustomTable/CustomTable"
 import React, { useEffect, useState } from "react";
 import './Members.css'
 
@@ -29,7 +30,7 @@ const Members = () => {
     }
     fetchData()
   }, []);
-
+  
   return (
     <div className="members-container">
       <h1>Members Table</h1>
@@ -37,35 +38,18 @@ const Members = () => {
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Member ID</TableCell>
-                <TableCell align="right">Rank</TableCell>
-                <TableCell align="right">Name</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {members.map((member) => (
-                <TableRow
-                  key={member.id}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row">
-                    {member.id}
-                  </TableCell>
-                  <TableCell align="right">{member.rank}</TableCell>
-                  <TableCell align="right">{member.name}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <CustomTable
+          arr={members}
+        />
       )}
     </div>
   );
 };
+
+// Add a member to database
+
+
+
 
 
 export default Members;
