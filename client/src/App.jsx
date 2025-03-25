@@ -9,6 +9,7 @@ import Crews from './Crews/Crews.jsx'
 import Positions from './Positions/Positions.jsx'
 import DetailsContext from './DetailsContext.jsx'
 
+
 function App() {
     const [members, setMembers] = useState([]); // Store data, not JSX
 
