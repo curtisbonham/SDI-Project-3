@@ -16,9 +16,9 @@
     "@mui/icons-material": "^6.4.8",
     "@mui/material": "^6.4.8",
     "dotenv": "^16.4.7",
+    "frappe-gantt": "^1.0.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-google-charts": "^5.2.1",
     "react-router-dom": "^7.3.0"
   },
   "devDependencies": {

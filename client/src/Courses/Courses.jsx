@@ -1,19 +1,76 @@
-import { useState, useEffect } from 'react';
-import './Courses.css';
-import CourseForm from './CourseForm.jsx';
-import GanttChart from './GanttChart.jsx';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { useState, useEffect, useRef } from "react";
+import "./Courses.css";
+import CourseForm from "./CourseForm.jsx";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import Gantt from "frappe-gantt"; // Import Frappé Gantt
+import GanttChart from './GanttChart.jsx'
 import { IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from "@mui/material";
+import "./frappe-gantt/frappe-gantt.css";
 
 function Courses() {
   const [courses, setCourses] = useState([]);
   const [open, setOpen] = useState(false); // State to control the delete dialog
   const [selectedCourseId, setSelectedCourseId] = useState(null); // State to store the course ID to delete
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control the course form modal
+  const ganttContainer = useRef(null); // Reference to the Gantt chart container
 
   useEffect(() => {
     fetchCourses();
   }, []);
+
+  useEffect(() => {
+    if (ganttContainer.current) {
+      // Validate and transform courses data for Frappé Gantt
+      const tasks = courses
+        .filter((course) => {
+          // Ensure both start_date and end_date exist
+          if (!course.start_date || !course.end_date) {
+            console.warn(`Missing dates for course: ${course.course_name}`);
+            return false;
+          }
+
+          // Validate date format and range
+          const startDate = new Date(course.start_date);
+          const endDate = new Date(course.end_date);
+          if (isNaN(startDate.getTime()) || isNaN(endDate.getTime()) || endDate < startDate) {
+            console.warn(`Invalid date range for course: ${course.course_name}`);
+            return false;
+          }
+
+          return true;
+        })
+        .map((course, index) => ({
+          id: course.id || `Course-${index + 1}`,
+          name: course.course_name || `Course ${index + 1}`,
+          start: course.start_date, // Format: YYYY-MM-DD
+          end: course.end_date, // Format: YYYY-MM-DD
+          progress: course.progress || 0,
+          dependencies: course.dependencies || "",
+        }));
+
+      if (tasks.length === 0) {
+        console.warn("No valid tasks available for the Gantt chart.");
+        return;
+      }
+
+      // Initialize Frappé Gantt
+      new Gantt(ganttContainer.current, tasks, {
+        view_mode: "Day", // Options: 'Quarter Day', 'Half Day', 'Day', 'Week', 'Month'
+        date_format: "YYYY-MM-DD", // Date format
+        custom_popup_html: (task) => {
+          // Custom popup for task details
+          return `
+            <div class="popup">
+              <h5>${task.name}</h5>
+              <p>Start: ${task.start}</p>
+              <p>End: ${task.end}</p>
+              <p>Progress: ${task.progress}%</p>
+            </div>
+          `;
+        },
+      });
+    }
+  }, [courses]);
 
   const fetchCourses = async () => {
     try {
@@ -49,7 +106,7 @@ function Courses() {
   const deleteCourse = async () => {
     try {
       const response = await fetch(`http://localhost:3001/courses/${selectedCourseId}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
 
       if (response.ok) {
@@ -57,134 +114,103 @@ function Courses() {
         handleClose(); // Close the dialog
       } else {
         const errorData = await response.json();
-        console.error(errorData.message || 'Failed to delete the course.');
+        console.error(errorData.message || "Failed to delete the course.");
       }
     } catch (err) {
-      console.error('Error deleting course:', err);
+      console.error("Error deleting course:", err);
     }
   };
 
   const openModal = () => setIsModalOpen(true); // Open the course form modal
   const closeModal = () => setIsModalOpen(false); // Close the course form modal
 
-  // Prepare data for the Gantt chart
-  const ganttData = [
-    [
-      { type: "string", label: "Task ID" },
-      { type: "string", label: "Task Name" },
-      { type: "string", label: "Resource" },
-      { type: "date", label: "Start Date" },
-      { type: "date", label: "End Date" },
-      { type: "number", label: "Duration" },
-      { type: "number", label: "Percent Complete" },
-      { type: "string", label: "Dependencies" },
-    ],
-    ...courses.map((course) => [
-      `Course-${course.id}`,
-      course.course_name,
-      course.position,
-      new Date(course.start_date), // Start Date
-      new Date(course.end_date), // End Date
-      null,
-      null,
-      null
-    ]),
-  ];
-
-  const ganttOptions = {
-    height: 400,
-    gantt: {
-      trackHeight: 30,
-    },
-  };
-
   return (
-    <div className='courses-container'>
-      <div className='gantt-chart-container'>
-        <GanttChart ganttData={ganttData} ganttOptions={ganttOptions} /><br />
-      </div>
+    <>
+      <div className="courses-container">
+        <h1>Course Timeline</h1>
+        <div className="gantt-chart-container" ref={ganttContainer}></div>
+        <GanttChart courses={courses}/>
+        {/* Add Course Button */}
+        <button className="add-course-btn" onClick={openModal}>
+          Add Course
+        </button>
 
-      {/* Add Course Button */}
-      <button className="add-course-btn" onClick={openModal}>
-        Add Course
-      </button>
-
-      {/* Modal for Course Form */}
-      {isModalOpen && (
-        <div className="modal-overlay" onClick={closeModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-
-            <h3>Add Course</h3>
-            <CourseForm fetchCourses={fetchCourses} />
-            <button className="close-modal-btn" onClick={closeModal}>
-              Close
-            </button>
+        {/* Modal for Course Form */}
+        {isModalOpen && (
+          <div className="modal-overlay" onClick={closeModal}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <h3>Add Course</h3>
+              <CourseForm fetchCourses={fetchCourses} />
+              <button className="close-modal-btn" onClick={closeModal}>
+                Close
+              </button>
+            </div>
           </div>
+        )}
+
+        <div className="course-information-container">
+          <h2>Courses Information</h2>
+          <table className="courses-table">
+            <thead>
+              <tr>
+                <th>Course Name</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Certified Position</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {courses.map((crs) => {
+                const formattedStartDate = new Date(crs.start_date).toLocaleDateString("en-US", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                });
+
+                const formattedEndDate = new Date(crs.end_date).toLocaleDateString("en-US", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                });
+
+                return (
+                  <tr key={crs.id}>
+                    <td>{crs.course_name}</td>
+                    <td>{formattedStartDate}</td>
+                    <td>{formattedEndDate}</td>
+                    <td>{crs.position}</td>
+                    <td>
+                      <IconButton onClick={() => handleOpen(crs.id)}>
+                        <DeleteForeverIcon />
+                      </IconButton>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
-      )}
 
-      <div className="course-information-container">
-        <h2>Courses Information</h2>
-        <table className="courses-table">
-          <thead>
-            <tr>
-              <th>Course Name</th>
-              <th>Start Date</th>
-              <th>End Date</th>
-              <th>Certified Position</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {courses.map((crs) => {
-              const formattedStartDate = new Date(crs.start_date).toLocaleDateString('en-US', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric',
-              });
-
-              const formattedEndDate = new Date(crs.end_date).toLocaleDateString('en-US', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric',
-              });
-
-              return (
-                <tr key={crs.id}>
-                  <td>{crs.course_name}</td>
-                  <td>{formattedStartDate}</td>
-                  <td>{formattedEndDate}</td>
-                  <td>{crs.position}</td>
-                  <td>
-                    <IconButton onClick={() => handleOpen(crs.id)}>
-                      <DeleteForeverIcon />
-                    </IconButton>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        {/* Dialog for confirmation */}
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>Confirm Deletion</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to delete this course? This action cannot be undone.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={deleteCourse} color="secondary">
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
-
-      {/* Dialog for confirmation */}
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Confirm Deletion</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Are you sure you want to delete this course? This action cannot be undone.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={deleteCourse} color="secondary">
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+    </>
   );
 }
 
