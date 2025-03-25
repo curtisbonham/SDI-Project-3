@@ -40,21 +40,22 @@ app.post('/members', (req, res) => {
 
   if (!name || !rank) {
     return res.status(400).json({
-      message: 'Missing required fields: name or rank.',
+      message: 'Both name and rank are required.',
     });
   }
 
+  // Insert the new member without including the 'id' field
   knex('members')
-    .insert({ name, rank })
-    .returning('*')
+    .insert({ name, rank }) // Do not include 'id' here
+    .returning('*') // Returning the inserted member data
     .then((data) => {
       res.status(201).json({
         message: 'Member added successfully!',
-        member: data[0], // the new member
+        data: data[0], // The newly added member data
       });
     })
     .catch((err) => {
-      console.error('Database insert error:', err);
+      console.error('Error inserting member:', err);
       res.status(500).json({
         message: 'An error occurred while adding the member. Please try again later.',
       });

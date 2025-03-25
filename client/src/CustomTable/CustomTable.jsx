@@ -198,6 +198,7 @@ import axios from 'axios';
 
 export default function CustomTable({ arr, api }) {
   const [rows, setRows] = React.useState(arr);
+  const [newRowData, setNewRowData] = React.useState({ name: '', rank: '' });
 
   const columns = Object.keys(arr[0]).map(key => ({
     field: key,
@@ -217,7 +218,7 @@ export default function CustomTable({ arr, api }) {
 
         // Update the state with the updated row
         setRows(prevRows =>
-          prevRows.map(row => (row.id === newRow.id ? response.data.data: row))
+          prevRows.map(row => (row.id === newRow.id ? response.data.data : row))
         );
       })
       .catch(error => {
@@ -226,29 +227,71 @@ export default function CustomTable({ arr, api }) {
       });
   }
 
+  // Function to handle adding a new member (POST request)
+  const handleAddRow = async () => {
+    if (!newRowData.name || !newRowData.rank) {
+      alert('Name and Rank are required.');
+      return;
+    }
+
+    try {
+      // POST the new row data to the server
+      const response = await axios.post(api, newRowData);
+      const newMember = response.data.data; // Assuming the server returns the new member object
+
+      // Add the new member to the existing rows state
+      setRows(prevRows => [...prevRows, newMember]);
+
+      // Clear input fields after adding
+      setNewRowData({ name: '', rank: '' });
+    } catch (error) {
+      console.error('Error adding member:', error);
+      alert("Failed to add member.");
+    }
+  };
+
   const paginationModel = { page: 0, pageSize: 10 };
 
   return (
-    <Paper sx={{ height: 400, width: '100%' }}>
-      <DataGrid
-        getRowId={(row) => row.id}
-        processRowUpdate={(updatedRow, originalRow) => {
-          // Trigger updateServer on row update
-          updateServer(updatedRow);
-          return updatedRow; // Return the updated row
-        }}
-        onProcessRowUpdateError={(error) => {
-          console.error("MUI row update error:", error);
-          alert("Something went wrong while updating the row.");
-        }}
-        editMode="row"
-        rows={rows}
-        columns={columns}
-        initialState={{ pagination: { paginationModel } }}
-        pageSizeOptions={[5, 10]}
-        checkboxSelection
-        sx={{ border: 0 }}
-      />
-    </Paper>
+    <>
+      {/* Input fields and button for adding a new row */}
+      <div style={{ marginBottom: '1rem' }}>
+        <input
+          type="text"
+          value={newRowData.name}
+          onChange={(e) => setNewRowData({ ...newRowData, name: e.target.value })}
+          placeholder="Name"
+        />
+        <input
+          type="text"
+          value={newRowData.rank}
+          onChange={(e) => setNewRowData({ ...newRowData, rank: e.target.value })}
+          placeholder="Rank"
+        />
+        <button onClick={handleAddRow}>Add Row</button>
+      </div>
+
+      <Paper sx={{ height: 400, width: '100%' }}>
+        <DataGrid
+          getRowId={(row) => row.id}
+          processRowUpdate={(updatedRow, originalRow) => {
+            // Trigger updateServer on row update
+            updateServer(updatedRow);
+            return updatedRow; // Return the updated row
+          }}
+          onProcessRowUpdateError={(error) => {
+            console.error("MUI row update error:", error);
+            alert("Something went wrong while updating the row.");
+          }}
+          editMode="row"
+          rows={rows}
+          columns={columns}
+          initialState={{ pagination: { paginationModel } }}
+          pageSizeOptions={[5, 10]}
+          checkboxSelection
+          sx={{ border: 0 }}
+        />
+      </Paper>
+    </>
   );
 }
