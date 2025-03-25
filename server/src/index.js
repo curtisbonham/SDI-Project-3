@@ -61,12 +61,12 @@ app.post('/members', (req, res) => {
 
   // Insert the new member without including the 'id' field
   knex('members')
-    .insert({ name, rank }) // Do not include 'id' here
-    .returning('*') // Returning the inserted member data
+    .insert({ name, rank })
+    .returning('*')
     .then((data) => {
       res.status(201).json({
         message: 'Member added successfully!',
-        data: data[0], // The newly added member data
+        data: data[0],
       });
     })
     .catch((err) => {
@@ -83,7 +83,7 @@ app.post('/members', (req, res) => {
 
 // PUT new members
 app.put('/members', (req, res) => {
-  const {id, name, rank } = req.body; // Get new values from request body
+  const {id, name, rank } = req.body;
 
   // Validate the required fields
   if (!id || !name || !rank) {
@@ -94,9 +94,9 @@ app.put('/members', (req, res) => {
 
   // Update the member in the database
   knex('members')
-    .where('id', id) // Find member by memberId
-    .update({ name, rank }) // Update name and rank
-    .returning('*') // Return the updated member data (optional)
+    .where('id', id)
+    .update({ name, rank })
+    .returning('*')
     .then((data) => {
       if (data.length === 0) {
         return res.status(404).json({
@@ -106,7 +106,7 @@ app.put('/members', (req, res) => {
 
       res.status(200).json({
         message: 'Member updated successfully!',
-        data: data[0], // Return the updated member data
+        data: data[0],
       });
     })
     .catch((err) => {
@@ -150,11 +150,10 @@ app.delete('/members/:id', (req, res) => {
 const formatDate = (date) => {
     if (!date) return null;
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+    const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
 };
-
 
 app.get('/courses', (req, res) => {
     knex('courses')
@@ -162,8 +161,8 @@ app.get('/courses', (req, res) => {
         .then((courses) => {
             const formattedCourses = courses.map((course) => ({
                 ...course,
-                start_date: formatDate(new Date(course.start_date)), // Format as local date
-                end_date: formatDate(new Date(course.end_date)), // Format as local date
+                start_date: formatDate(new Date(course.start_date)),
+                end_date: formatDate(new Date(course.end_date)),
             }));
             res.status(200).json(formattedCourses);
         })
@@ -177,22 +176,20 @@ app.get('/courses', (req, res) => {
 
 app.post('/courses', (req, res) => {
   const { course_name, start_date, end_date, cert_id } = req.body;
-  console.log("request body:", req.body)
   // Validate the input
   if (!course_name || !start_date || !end_date || !cert_id) {
     return res.status(400).json({
       message: 'Missing required fields: course_name, start_date, end_date, or cert_id.',
     });
   }
-
   // Insert the new course into the database
   knex('courses')
     .insert({ course_name, start_date, end_date, cert_id })
-    .returning('*') // Return the inserted course
+    .returning('*')
     .then((data) => {
       res.status(201).json({
         message: 'Course added successfully!',
-        course: data[0], // Return the inserted course
+        course: data[0],
       });
     })
     .catch((err) => {
@@ -282,25 +279,49 @@ app.get('/members/courses', (req, res) => {
     });
 });
 
-app.get('/courses/certs', (req, res) => {
+app.get('/courses/members', (req, res) => {
   knex('courses')
     .leftJoin('intermediate', 'courses.id', '=', 'intermediate.course_id')
+    .leftJoin('members', 'intermediate.member_id', '=', 'members.id')
     .leftJoin('certifications', 'intermediate.cert_id', '=', 'certifications.id')
-    .select('courses.id as course_id',
-      'certifications.id as c_id',
-      'courses.cert_id',
-      'course_name',
-      'start_date',
-      'end_date',
-      'certifications.position')
-    .orderBy('courses.id')
+    .select(
+      'courses.id as course_id',
+      'courses.course_name',
+      'courses.start_date',
+      'courses.end_date',
+      'certifications.position as certification_position',
+      'members.name as member_name',
+      'members.rank as member_rank'
+    )
     .then((data) => {
       res.status(200).json(data);
     })
     .catch((err) => {
       console.error("Database query error:", err);
       res.status(500).json({
-        message: 'An error occurred while fetching data. Please try again later.',
+        message: 'An error occurred while fetching data.',
+      });
+    });
+});
+
+app.get('/courses/certs', (req, res) => {
+  knex('courses')
+    .leftJoin('intermediate', 'courses.id', '=', 'intermediate.course_id')
+    .leftJoin('certifications', 'intermediate.cert_id', '=', 'certifications.id')
+    .select(
+      'courses.id as course_id',
+      'courses.cert_id',
+      'certifications.id as c_id',
+      'certifications.position'
+    )
+    .then((data) => {
+      console.log("Data returned by /courses/certs:", data);
+      res.status(200).json(data);
+    })
+    .catch((err) => {
+      console.error("Database query error:", err);
+      res.status(500).json({
+        message: 'An error occurred while fetching certifications.',
       });
     });
 });
@@ -319,6 +340,40 @@ app.get('/all', (req, res) => {
       res.status(500).json({
         message: 'An error occurred while fetching data. Please try again later.',
       });
+    });
+});
+
+app.post('/assign-member', (req, res) => {
+  const { course_id, member_id, cert_id } = req.body;
+  if (!course_id || !member_id || !cert_id) {
+    return res.status(400).json({
+      message: 'Missing required fields: course_id, member_id, or cert_id.',
+    });
+  }
+  knex('intermediate')
+    .insert({ course_id, member_id, cert_id })
+    .onConflict(['course_id', 'cert_id'])
+    .merge({ member_id })
+    .then(() => {
+      res.status(200).json({
+        message: 'Member assigned to course successfully!',
+      });
+    })
+    .catch((err) => {
+      console.error('Database error:', err);
+      res.status(500).json({
+        message: 'An error occurred while assigning the member to the course.',
+      });
+    });
+});
+
+app.get('/certifications', (req, res) => {
+  knex('certifications')
+    .select('id', 'position')
+    .then((data) => res.status(200).json(data))
+    .catch((err) => {
+      console.error('Error fetching certifications:', err);
+      res.status(500).json({ message: 'Failed to fetch certifications.' });
     });
 });
 
