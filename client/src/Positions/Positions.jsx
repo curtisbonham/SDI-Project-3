@@ -8,7 +8,7 @@ function Positions() {
       <ul className='positions'>
       <li className='position'>
           <div className='image'>
-          <img src="../public/commander.png" alt="" style={{ width: '150%' }} />
+          <img src="../public/commander.png" alt="" />
           </div>
           <div className='details'>
             <h3>Crew Commander<span id="colon">:</span></h3>

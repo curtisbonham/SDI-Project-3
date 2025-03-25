@@ -50,13 +50,13 @@ const AssignMemberForm = ({ api, fetchCourses }) => {
         body: JSON.stringify(payload),
       });
 
-      console.log("Response status:", response.status); // Debugging log
+      console.log("Response status:", response.status);
 
       if (response.ok) {
         const responseData = await response.json();
-        console.log("Response data from server:", responseData); // Debugging log
+        console.log("Response data from server:", responseData); //Debugging log
         alert("Member assigned to course successfully!");
-        fetchCourses(); // Refresh the courses list
+        fetchCourses();
       } else {
         const errorData = await response.json();
         console.error("Error response from server:", errorData); // Debugging log

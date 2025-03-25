@@ -301,7 +301,7 @@ app.get('/courses/certs', (req, res) => {
       'certifications.position'
     )
     .then((data) => {
-      console.log("Data returned by /courses/certs:", data); 
+      console.log("Data returned by /courses/certs:", data);
       res.status(200).json(data);
     })
     .catch((err) => {
