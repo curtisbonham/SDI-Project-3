@@ -4,9 +4,9 @@
  */
 exports.up = function(knex) {
   return knex.schema.createTable('members', table => {
-    table.increments();
-    table.string('rank');
-    table.string('name');
+    table.increments('id').primary();
+    table.string('rank').notNullable();
+    table.string('name').notNullable();
   });
 };
 

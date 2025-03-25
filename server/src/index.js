@@ -11,12 +11,12 @@ app.use(cors());
 app.use(express.json());
 
 if (!PORT) {
-	dotenv.config({ path: path.resolve(__dirname, "../.env") });
-	PORT = process.env.SERVER_PORT;
+    dotenv.config({ path: path.resolve(__dirname, "../.env") });
+    PORT = process.env.SERVER_PORT;
 }
 
 app.get("/", (req, res) => {
-	res.send("Hello World!");
+    res.send("Hello World!");
 });
 
 app.get('/members', (req, res) => {
@@ -33,23 +33,137 @@ app.get('/members', (req, res) => {
     });
 });
 
-app.get('/courses', (req, res) => {
-  knex('courses')
-    .select('*')
-    .then(data => {
-      res.status(200).json(data);
+
+// POST new members
+
+app.post('/members', (req, res) => {
+  const { name, rank } = req.body;
+
+  if (!name || !rank) {
+    return res.status(400).json({
+      message: 'Both name and rank are required.',
+    });
+  }
+
+  // Insert the new member without including the 'id' field
+  knex('members')
+    .insert({ name, rank }) // Do not include 'id' here
+    .returning('*') // Returning the inserted member data
+    .then((data) => {
+      res.status(201).json({
+        message: 'Member added successfully!',
+        data: data[0], // The newly added member data
+      });
     })
-    .catch(err => {
-      console.error("Database query error:", err);
+    .catch((err) => {
+      console.error('Error inserting member:', err);
       res.status(500).json({
-        message: 'An error occurred while fetching data. Please try again later.'
+        message: 'An error occurred while adding the member. Please try again later.',
       });
     });
 });
 
+
+// end of POST new members
+
+
+// PUT new members
+app.put('/members', (req, res) => {
+  const {id, name, rank } = req.body; // Get new values from request body
+
+  // Validate the required fields
+  if (!id || !name || !rank) {
+    return res.status(400).json({
+      message: 'Missing required fields: memberId, name, or rank.',
+    });
+  }
+
+  // Update the member in the database
+  knex('members')
+    .where('id', id) // Find member by memberId
+    .update({ name, rank }) // Update name and rank
+    .returning('*') // Return the updated member data (optional)
+    .then((data) => {
+      if (data.length === 0) {
+        return res.status(404).json({
+          message: 'Member not found',
+        });
+      }
+
+      res.status(200).json({
+        message: 'Member updated successfully!',
+        data: data[0], // Return the updated member data
+      });
+    })
+    .catch((err) => {
+      console.error('Database update error:', err);
+      res.status(500).json({
+        message: 'An error occurred while updating the member. Please try again later.',
+      });
+    });
+});
+//END of PUT new Members
+
+// DELETE member
+app.delete('/members/:id', (req, res) => {
+  const { id } = req.params;
+
+  knex('members')
+    .where({ id })
+    .del()
+    .then((count) => {
+      if (count === 0) {
+        return res.status(404).json({
+          message: `Member with id ${id} not found.`,
+        });
+      }
+      res.status(200).json({
+        message: `Member with id ${id} deleted successfully.`,
+      });
+    })
+    .catch((err) => {
+      console.error('Database delete error:', err);
+      res.status(500).json({
+        message: 'An error occurred while deleting the member. Please try again later.',
+      });
+    });
+});
+
+// END DELETE member
+
+
+// Helper function to format dates as "yyyy-MM-dd" using local time
+const formatDate = (date) => {
+    if (!date) return null;
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+};
+
+
+app.get('/courses', (req, res) => {
+    knex('courses')
+        .select('*')
+        .then((courses) => {
+            const formattedCourses = courses.map((course) => ({
+                ...course,
+                start_date: formatDate(new Date(course.start_date)), // Format as local date
+                end_date: formatDate(new Date(course.end_date)), // Format as local date
+            }));
+            res.status(200).json(formattedCourses);
+        })
+        .catch((err) => {
+            console.error("Database query error:", err);
+            res.status(500).json({
+                message: 'An error occurred while fetching courses.',
+            });
+        });
+});
+
 app.post('/courses', (req, res) => {
   const { course_name, start_date, end_date, cert_id } = req.body;
-
+  console.log("request body:", req.body)
   // Validate the input
   if (!course_name || !start_date || !end_date || !cert_id) {
     return res.status(400).json({
@@ -71,6 +185,45 @@ app.post('/courses', (req, res) => {
       console.error('Database insert error:', err);
       res.status(500).json({
         message: 'An error occurred while adding the course. Please try again later.',
+      });
+    });
+});
+
+app.patch('/courses/:id', (req, res) => {
+  const { id } = req.params;
+  const { course_name, start_date, end_date, cert_id } = req.body;
+
+  if (!course_name && !start_date && !end_date && !cert_id) {
+    return res.status(400).json({
+      message: 'At least one field is empty and is needed for an update',
+    });
+  }
+
+  const updateData = {};
+  if (course_name) updateData.course_name = course_name;
+  if (start_date) updateData.start_date = start_date;
+  if (end_date) updateData.end_date = end_date;
+  if (cert_id) updateData.cert_id = cert_id;
+
+  knex('courses')
+    .where({ id })
+    .update(updateData)
+    .returning('*')
+    .then((updatedCourse) => {
+      if (updatedCourse.length === 0) {
+        return res.status(404).json({
+          message: `Course with id ${id} not found.`,
+        });
+      }
+      res.status(200).json({
+        message: `${course_name} with id ${id} updated successfully.`,
+        course: updatedCourse[0],
+      });
+    })
+    .catch((err) => {
+      console.error('Database update error:', err);
+      res.status(500).json({
+        message: 'An error occurred while updating the course. Please try again.',
       });
     });
 });
@@ -101,55 +254,62 @@ app.delete('/courses/:id', (req, res) => {
 
 app.get('/members/courses', (req, res) => {
   knex('members')
-		.join('intermediate', 'members.id', '=', 'member_id')
-		.join('courses', 'course_id', '=', 'courses.id')
+    .join('intermediate', 'members.id', '=', 'member_id')
+    .join('courses', 'course_id', '=', 'courses.id')
     .select('*')
-    .then(data => {
+    .then((data) => {
       res.status(200).json(data);
     })
-    .catch(err => {
+    .catch((err) => {
       console.error("Database query error:", err);
       res.status(500).json({
-        message: 'An error occurred while fetching data. Please try again later.'
+        message: 'An error occurred while fetching data. Please try again later.',
       });
     });
 });
 
 app.get('/courses/certs', (req, res) => {
   knex('courses')
-    .join('intermediate', 'courses.id', '=', 'intermediate.course_id')
-    .join('certifications', 'intermediate.cert_id', '=', 'certifications.id')
-    .select('courses.id as course_id', 'certifications.id as c_id', 'courses.cert_id', 'course_name', 'start_date', 'end_date', 'position')
-    .orderBy('position')
-    .then(data => {
+    .leftJoin('intermediate', 'courses.id', '=', 'intermediate.course_id')
+    .leftJoin('certifications', 'intermediate.cert_id', '=', 'certifications.id')
+    .select('courses.id as course_id',
+      'certifications.id as c_id',
+      'courses.cert_id',
+      'course_name',
+      'start_date',
+      'end_date',
+      'certifications.position')
+    .orderBy('courses.id')
+    .then((data) => {
       res.status(200).json(data);
     })
-    .catch(err => {
+    .catch((err) => {
       console.error("Database query error:", err);
       res.status(500).json({
-        message: 'An error occurred while fetching data. Please try again later.'
+        message: 'An error occurred while fetching data. Please try again later.',
       });
     });
 });
 
 app.get('/all', (req, res) => {
   knex('members')
-		.join('intermediate', 'members.id', '=', 'intermediate.member_id')
-		.join('certifications', 'intermediate.cert_id','=' , 'certifications.id')
-		.join('crews', 'intermediate.member_id', '=', 'crews.member_id')
+    .join('intermediate', 'members.id', '=', 'intermediate.member_id')
+    .join('certifications', 'intermediate.cert_id', '=', 'certifications.id')
+    .join('crews', 'intermediate.member_id', '=', 'crews.member_id')
     .select('*')
-    .then(data => {
+    .then((data) => {
       res.status(200).json(data);
     })
-    .catch(err => {
+    .catch((err) => {
       console.error("Database query error:", err);
       res.status(500).json({
-        message: 'An error occurred while fetching data. Please try again later.'
+        message: 'An error occurred while fetching data. Please try again later.',
       });
     });
 });
+
 const server = app.listen(PORT, () => {
-	console.log(`App listening at http://localhost:${PORT}`);
+  console.log(`App listening at http://localhost:${PORT}`);
 });
 
 module.exports = { app, server, PORT };

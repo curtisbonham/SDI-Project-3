@@ -2,8 +2,9 @@ import { useState, useEffect, useRef } from "react";
 import "./Courses.css";
 import CourseForm from "./CourseForm.jsx";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import EditIcon from "@mui/icons-material/Edit";
 import Gantt from "frappe-gantt"; // Import Frappé Gantt
-import GanttChart from './GanttChart.jsx'
+import GanttChart from "./GanttChart.jsx";
 import { IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from "@mui/material";
 import "./frappe-gantt/frappe-gantt.css";
 
@@ -12,6 +13,9 @@ function Courses() {
   const [open, setOpen] = useState(false); // State to control the delete dialog
   const [selectedCourseId, setSelectedCourseId] = useState(null); // State to store the course ID to delete
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control the course form modal
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState(null);
   const ganttContainer = useRef(null); // Reference to the Gantt chart container
 
   useEffect(() => {
@@ -42,10 +46,11 @@ function Courses() {
         .map((course, index) => ({
           id: course.id || `Course-${index + 1}`,
           name: course.course_name || `Course ${index + 1}`,
-          start: course.start_date, // Format: YYYY-MM-DD
-          end: course.end_date, // Format: YYYY-MM-DD
+          start: course.start_date,
+          end: course.end_date,
           progress: course.progress || 0,
           dependencies: course.dependencies || "",
+          custom_class: `cert_${course.cert_id}`,
         }));
 
       if (tasks.length === 0) {
@@ -55,8 +60,8 @@ function Courses() {
 
       // Initialize Frappé Gantt
       new Gantt(ganttContainer.current, tasks, {
-        view_mode: "Day", // Options: 'Quarter Day', 'Half Day', 'Day', 'Week', 'Month'
-        date_format: "YYYY-MM-DD", // Date format
+        view_mode: "Day",
+        date_format: "YYYY-MM-DD",
         custom_popup_html: (task) => {
           // Custom popup for task details
           return `
@@ -74,33 +79,49 @@ function Courses() {
 
   const fetchCourses = async () => {
     try {
-      const [coursesData, certsData] = await Promise.all([
-        fetch("http://localhost:3001/courses/").then((res) => res.json()),
-        fetch("http://localhost:3001/courses/certs").then((res) => res.json()),
-      ]);
+        const [coursesData, certsData] = await Promise.all([
+            fetch("http://localhost:3001/courses/").then((res) => res.json()),
+            fetch("http://localhost:3001/courses/certs").then((res) => res.json()),
+        ]);
+        console.log(certsData)
+        const mergedData = coursesData.map((course) => {
+            const cert = certsData.find((cert) => cert.c_id === course.cert_id);
 
-      const mergedData = coursesData.map((course) => {
-        const cert = certsData.find((cert) => cert.c_id === course.cert_id);
+            // Ensure dates are treated as local dates
+            return {
+                ...course,
+                start_date: course.start_date,
+                end_date: course.end_date,
+                position: cert ? cert.position : "N/A",
+            };
+        });
 
-        return {
-          ...course,
-          position: cert ? cert.position : "N/A",
-        };
-      });
-      setCourses(mergedData);
+        setCourses(mergedData);
     } catch (err) {
-      console.error("Error fetching data:", err);
+        console.error("Error fetching data:", err);
     }
-  };
+};
 
   const handleOpen = (id) => {
     setSelectedCourseId(id); // Set the course ID to delete
     setOpen(true); // Open the delete dialog
   };
 
+  const handleEdit = (id) => {
+    const courseToEdit = courses.find((course) => course.id === id);
+    setEdit(true);
+    setSelectedCourse(courseToEdit);
+    setIsEditModalOpen(true); // Open the edit modal
+  };
+
   const handleClose = () => {
     setOpen(false); // Close the delete dialog
     setSelectedCourseId(null); // Clear the selected course ID
+  };
+
+  const handleEditClose = () => {
+    setEdit(false);
+    setSelectedCourseId(null);
   };
 
   const deleteCourse = async () => {
@@ -123,14 +144,19 @@ function Courses() {
 
   const openModal = () => setIsModalOpen(true); // Open the course form modal
   const closeModal = () => setIsModalOpen(false); // Close the course form modal
+  const openEditModal = (id) => {
+    const courseToEdit = courses.find((course) => course.id === id);
+    setSelectedCourse(courseToEdit);
+    setIsEditModalOpen(true);
+  };
+  const closeEditModal = () => setIsEditModalOpen(false);
 
   return (
     <>
       <div className="courses-container">
         <h1>Course Timeline</h1>
         <div className="gantt-chart-container" ref={ganttContainer}></div>
-        <GanttChart courses={courses}/>
-        {/* Add Course Button */}
+        <GanttChart courses={courses} />
         <button className="add-course-btn" onClick={openModal}>
           Add Course
         </button>
@@ -140,8 +166,24 @@ function Courses() {
           <div className="modal-overlay" onClick={closeModal}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
               <h3>Add Course</h3>
-              <CourseForm fetchCourses={fetchCourses} />
+              <CourseForm fetchCourses={fetchCourses} course={selectedCourse} />
               <button className="close-modal-btn" onClick={closeModal}>
+                Close
+              </button>
+            </div>
+          </div>
+        )}
+        {isEditModalOpen && (
+          <div className="modal-overlay" onClick={closeEditModal}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <h3>Edit Course</h3>
+              <CourseForm
+                fetchCourses={fetchCourses}
+                course={selectedCourse}
+                edit={true}
+                closeEditModal={closeEditModal}
+              />
+              <button className="close-modal-btn" onClick={closeEditModal}>
                 Close
               </button>
             </div>
@@ -161,33 +203,22 @@ function Courses() {
               </tr>
             </thead>
             <tbody>
-              {courses.map((crs) => {
-                const formattedStartDate = new Date(crs.start_date).toLocaleDateString("en-US", {
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                });
-
-                const formattedEndDate = new Date(crs.end_date).toLocaleDateString("en-US", {
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                });
-
-                return (
-                  <tr key={crs.id}>
-                    <td>{crs.course_name}</td>
-                    <td>{formattedStartDate}</td>
-                    <td>{formattedEndDate}</td>
-                    <td>{crs.position}</td>
-                    <td>
-                      <IconButton onClick={() => handleOpen(crs.id)}>
-                        <DeleteForeverIcon />
-                      </IconButton>
-                    </td>
-                  </tr>
-                );
-              })}
+              {courses.map((crs) => (
+                <tr key={crs.id}>
+                  <td>{crs.course_name}</td>
+                  <td>{crs.start_date}</td> {/* Display the formatted start_date */}
+                  <td>{crs.end_date}</td> {/* Display the formatted end_date */}
+                  <td>{crs.position}</td>
+                  <td>
+                    <IconButton onClick={() => handleOpen(crs.id)}>
+                      <DeleteForeverIcon />
+                    </IconButton>
+                    <IconButton onClick={() => handleEdit(crs.id)}>
+                      <EditIcon />
+                    </IconButton>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
