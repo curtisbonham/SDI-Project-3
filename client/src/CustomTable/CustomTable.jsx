@@ -9,7 +9,7 @@ export default function CustomTable({arr}){
 
 
     const rows = arr
-    const paginationModel = { page: 0, pageSize: 5 };
+    const paginationModel = { page: 0, pageSize: 10 };
 
         return (
             <Paper sx={{ height: 400, width: '100%' }}>
