@@ -7,8 +7,8 @@ exports.up = function(knex) {
     table.integer('course_id');
     table.foreign('course_id').references('id').inTable('courses').onDelete('CASCADE');
 
-    table.integer('member_id');
-    table.foreign('member_id').references('id').inTable('members').onDelete('CASCADE');
+    table.integer('member_id').nullable();
+    table.foreign('member_id').references('id').inTable('members').onDelete('CASCADE')
 
     table.integer('cert_id');
     table.foreign('cert_id').references('id').inTable('certifications').onDelete('CASCADE');

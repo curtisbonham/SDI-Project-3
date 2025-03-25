@@ -1,16 +1,30 @@
-.gantt-chart-container {
-  width: 100%; /* Ensure the container takes up the full width */
-  height: 400px; /* Set a fixed height for the container */
-  overflow-x: auto; /* Allow horizontal scrolling if the chart overflows */
-  overflow-y: auto; /* Prevent vertical overflow */
-  position: relative; /* Ensure proper positioning */
-  background-color: white; /* Set a white background to remove the black bar */
-  border: 1px solid #ddd; /* Optional: Add a border for better visibility */
+/* .gantt-chart-container {
+  width: 100%;
+  height: 400px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  position: relative;
+  background-color: white;
+  border: 1px solid #ddd;
+  border: 1px solid red;
+} */
+
+/* .gantt-chart {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+} */
+
+/* Custom styles for Gantt chart bars based on cert_id */
+.cert_1 {
+  fill: #4caf50; /* Green for cert_id 1 */
 }
 
-.gantt-chart {
-  width: 100%; /* Ensure the chart takes up the full width of the container */
-  height: 100%; /* Ensure the chart takes up the full height of the container */
-  margin: 0; /* Remove any default margins */
-  padding: 0; /* Remove any default padding */
+.cert_2 {
+  fill: #2196f3; /* Blue for cert_id 2 */
+}
+
+.cert_3 {
+  fill: #ff9800; /* Orange for cert_id 3 */
 }

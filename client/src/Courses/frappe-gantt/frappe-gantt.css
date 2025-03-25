@@ -7,6 +7,9 @@
     font-size: 12px;
     height: var(--gv-grid-height);
     width: 100%;
+    height: auto;
+    margin: 0;
+    padding: 0;
     border-radius: 8px;
 
     & .popup-wrapper {
@@ -341,3 +344,15 @@
         }
     }
 }
+
+.gantt .bar.cert_1 {
+    fill: #4caf50; /* Green for cert_id 1 */
+  }
+
+  .gantt .bar.cert_2 {
+    fill: #2196f3; /* Blue for cert_id 2 */
+  }
+
+  .gantt .bar.cert_3 {
+    fill: #ff9800; /* Orange for cert_id 3 */
+  }

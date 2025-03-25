@@ -30,7 +30,7 @@ services:
     restart: always
     ports:
       - "${DATABASE_PORT}:${DATABASE_PORT}"
-    image: postgres:latest
+    image: postgres
     environment:
       POSTGRES_USER: ${USER_NAME}
       POSTGRES_PASSWORD: ${USER_PASSWORD}

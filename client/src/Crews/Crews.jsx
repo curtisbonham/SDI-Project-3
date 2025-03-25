@@ -6,8 +6,7 @@ function Crews() {
 
     return(
         <div className='crews-container'>
-          <h1>Crews Page</h1>
-
+          <h1>Crews Page Under Construction</h1>
         </div>
     );
 }
