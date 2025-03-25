@@ -33,6 +33,105 @@ app.get('/members', (req, res) => {
     });
 });
 
+
+// POST new members
+
+app.post('/members', (req, res) => {
+  const { name, rank } = req.body;
+
+  if (!name || !rank) {
+    return res.status(400).json({
+      message: 'Both name and rank are required.',
+    });
+  }
+
+  // Insert the new member without including the 'id' field
+  knex('members')
+    .insert({ name, rank }) // Do not include 'id' here
+    .returning('*') // Returning the inserted member data
+    .then((data) => {
+      res.status(201).json({
+        message: 'Member added successfully!',
+        data: data[0], // The newly added member data
+      });
+    })
+    .catch((err) => {
+      console.error('Error inserting member:', err);
+      res.status(500).json({
+        message: 'An error occurred while adding the member. Please try again later.',
+      });
+    });
+});
+
+
+// end of POST new members
+
+
+// PUT new members
+app.put('/members', (req, res) => {
+  const {id, name, rank } = req.body; // Get new values from request body
+
+  // Validate the required fields
+  if (!id || !name || !rank) {
+    return res.status(400).json({
+      message: 'Missing required fields: memberId, name, or rank.',
+    });
+  }
+
+  // Update the member in the database
+  knex('members')
+    .where('id', id) // Find member by memberId
+    .update({ name, rank }) // Update name and rank
+    .returning('*') // Return the updated member data (optional)
+    .then((data) => {
+      if (data.length === 0) {
+        return res.status(404).json({
+          message: 'Member not found',
+        });
+      }
+
+      res.status(200).json({
+        message: 'Member updated successfully!',
+        data: data[0], // Return the updated member data
+      });
+    })
+    .catch((err) => {
+      console.error('Database update error:', err);
+      res.status(500).json({
+        message: 'An error occurred while updating the member. Please try again later.',
+      });
+    });
+});
+//END of PUT new Members
+
+// DELETE member
+app.delete('/members/:id', (req, res) => {
+  const { id } = req.params;
+
+  knex('members')
+    .where({ id })
+    .del()
+    .then((count) => {
+      if (count === 0) {
+        return res.status(404).json({
+          message: `Member with id ${id} not found.`,
+        });
+      }
+      res.status(200).json({
+        message: `Member with id ${id} deleted successfully.`,
+      });
+    })
+    .catch((err) => {
+      console.error('Database delete error:', err);
+      res.status(500).json({
+        message: 'An error occurred while deleting the member. Please try again later.',
+      });
+    });
+});
+
+// END DELETE member
+
+
 // Helper function to format dates as "yyyy-MM-dd" using local time
 const formatDate = (date) => {
     if (!date) return null;
@@ -41,6 +140,7 @@ const formatDate = (date) => {
     const day = String(date.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
 };
+
 
 app.get('/courses', (req, res) => {
     knex('courses')
