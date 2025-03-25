@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import { IconButton} from "@mui/material";
 import axios from 'axios';
+import './CustomTable.css';
 
 export default function CustomTable({ arr, api }) {
   const [rows, setRows] = React.useState(arr);
@@ -29,12 +32,10 @@ export default function CustomTable({ arr, api }) {
       filterable: false,
       width: 100,
       renderCell: (params) => (
-        <button
-          onClick={() => handleDelete(params.row.id)}
-          style={{ color: 'white', background: 'red', border: 'none', padding: '4px 8px', cursor: 'pointer' }}
-        >
-          Delete
-        </button>
+        <IconButton onClick={() => handleDelete(params.row.id)}>
+        <DeleteForeverIcon />
+      </IconButton>
+
       ),
     }
   ];
@@ -113,7 +114,7 @@ export default function CustomTable({ arr, api }) {
       {/* Dynamically create input fields for each property excluding 'id' */}
       <div style={{ marginBottom: '1rem' }}>
         {columns.map((column) => (
-          column.field !== 'id' && ( // Exclude 'id' field from input fields
+          (column.field !== 'id' && column.field !== "actions") &&  ( // Exclude 'id' field from input fields
             <div key={column.field} style={{ marginBottom: '1rem' }}>
               <input
                 type="text"
@@ -127,7 +128,7 @@ export default function CustomTable({ arr, api }) {
         <button onClick={handleAddRow}>Add Row</button>
       </div>
 
-      <Paper sx={{ height: 400, width: '100%' }}>
+      <Paper sx={{ height: 800, width: '100%' }}>
         <DataGrid
           getRowId={(row) => row.id}
           processRowUpdate={(updatedRow, originalRow) => {
@@ -143,7 +144,7 @@ export default function CustomTable({ arr, api }) {
           rows={rows}
           columns={columns}
           initialState={{ pagination: { paginationModel } }}
-          pageSizeOptions={[5, 10]}
+          pageSizeOptions={[10, 20]}
           checkboxSelection
           sx={{ border: 0 }}
         />
