@@ -14,6 +14,8 @@ export default function CustomTable({ arr, api }) {
 
   const [rows, setRows] = React.useState(arr);
 
+  
+
   // Dynamically generate columns from the keys of the first object in `arr`
   const columns = React.useMemo(() => [
     ...Object.keys(arr[0]).filter((key) => key !== 'assigned_courses').map((key) => ({
@@ -52,6 +54,16 @@ export default function CustomTable({ arr, api }) {
       ),
     },
   ], [arr]);
+
+  // Create the initial state for newRowData, exclude 'id'
+  const initialRowData = arr[0] ? Object.keys(arr[0]).reduce((acc, key) => {
+    if (key !== 'id') {
+      acc[key] = ''; // Initialize all fields as empty strings except 'id'
+    }
+    return acc;
+  }, {}) : {};
+  
+  const [newRowData, setNewRowData] = React.useState(initialRowData);
 
   // Function to update the server when a row is edited
   const updateServer = (newRow) => {
@@ -142,6 +154,21 @@ export default function CustomTable({ arr, api }) {
 
   return (
     <>
+      <div style={{ marginBottom: '1rem' }}>
+        {columns.map((column) => (
+          (column.field !== 'id' && column.field !== "actions") &&  ( // Exclude 'id' field from input fields
+            <div key={column.field} style={{ marginBottom: '1rem' }}>
+              <input
+                type="text"
+                value={newRowData[column.field]}
+                onChange={(e) => setNewRowData({ ...newRowData, [column.field]: e.target.value })}
+                placeholder={column.headerName}
+              />
+            </div>
+          )
+        ))}
+        <button onClick={handleAddRow}>Add Row</button>
+      </div>
       <Paper sx={{ height: 800, width: '100%' }}>
         <DataGrid
           getRowId={(row) => row.member_id}
