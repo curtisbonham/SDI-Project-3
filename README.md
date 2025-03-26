@@ -5,6 +5,7 @@
 Once a new member is added, you can assign them to their training pipeline for one of their eventual crew positions: **Crew Commander**, **Purveyor of Fine Goods**, **Linguist**, **Cook**, **Deckhand**, **Space Surgeon**, or **Engineer**. You can also check out the **Positions** page to get a description of each crew position.
 
 To create a new courses, check out the **Courses** page and click the **Add Course** button to put a new course on the timeline. If you need more detail, or detail at a glance, scroll down to the **Courses Information** section. Also in that section, you can delete or edit a course by clicking the respective icons!!
+---
 
 ## Problem Statement
 
@@ -21,6 +22,7 @@ Our solution is to create a crew scheduling tool that enables scheduling manager
 - PostgreSQL
 - Git
 - Docker
+---
 
 ## 🚀 Run Locally
 
@@ -30,20 +32,26 @@ Ensure you run the following command to install required dependencies:
 
 -   npm install
 
+----
+
 ### 🔹 Clone the repository
 
 ```bash
   git clone https://github.com/curtisbonham/SDI-Project-3
 ```
-
+---
 ## User Stories/ERD/Wireframe
 
 [Figma](https://www.figma.com/board/tFoJ139YpyI3SxZGz8hjRo/Project-3?node-id=40-118&t=g3NpV4sDbmqEVQzO-0)
+---
 
 ## Screenshots
 
 ![Members Tab](./client/public/membersTab.png)
 ![Courses Tab](./client/public/CoursesTab.png)
+![Crews Tab](./client/public/CrewsTab.png)
+![Positions Tab](./client/public/PositionsTab.png)
+---
 
 ## Authors
 
