@@ -41,9 +41,14 @@ export default function CustomTable({ arr, api }) {
       filterable: false,
       width: 100,
       renderCell: (params) => (
-        <IconButton onClick={() => handleDelete(params.row.id)}>
+        <>
+        <IconButton onClick={() => handleDelete(params.row.member_id)}>
           <DeleteForeverIcon />
         </IconButton>
+        <IconButton onClick={() => handleRemoveCourse(params.row.member_id, params.row.assigned_courses)}>
+          <span style={{ color: 'black', fontSize: 12, fontWeight: 'bold' }}>Remove Course</span>
+        </IconButton>
+      </>
       ),
     },
   ], [arr]);
@@ -97,6 +102,41 @@ export default function CustomTable({ arr, api }) {
     } catch (error) {
       console.error('Error deleting member:', error);
       alert("Failed to delete member.");
+    }
+  };
+
+  const handleRemoveCourse = async (memberId, assignedCourses) => {
+    if (!assignedCourses || assignedCourses === "None") {
+      alert("This member is not assigned to any courses.");
+      return;
+    }
+
+    const courseName = prompt(
+      `Enter the course name to remove from member's assigned courses: \n${assignedCourses}`
+    );
+    if (!courseName) return; // If the user cancels the prompt, do nothing
+
+    try {
+      const response = await axios.delete(`http://localhost:3001/members/${memberId}/courses/${courseName}`);
+      if (response.status === 200) {
+        alert("Member successfully removed from course!");
+        setRows((prevRows) =>
+          prevRows.map((row) =>
+            row.member_id === memberId
+              ? {
+                  ...row,
+                  assigned_courses: row.assigned_courses
+                    .split(", ")
+                    .filter((course) => course !== courseName)
+                    .join(", ") || "None",
+                }
+              : row
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error removing member from course:", error);
+      alert("Failed to remove the member from the course. Please try again.");
     }
   };
 

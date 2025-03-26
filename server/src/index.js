@@ -378,6 +378,29 @@ app.post('/assign-member', (req, res) => {
     });
 });
 
+app.delete('/members/:memberId/courses/:courseName', (req, res) => {
+  const { memberId, courseName } = req.params;
+
+  knex('intermediate')
+    .leftJoin('courses', 'intermediate.course_id', '=', 'courses.id')
+    .where({ member_id: memberId })
+    .andWhere('courses.course_name', courseName)
+    .del()
+    .then((count) => {
+      if (count > 0) {
+        res.status(200).json({ message: 'Member removed from course successfully.' });
+      } else {
+        res.status(404).json({ message: 'No such member-course relationship found.' });
+      }
+    })
+    .catch((err) => {
+      console.error('Database delete error:', err);
+      res.status(500).json({
+        message: 'An error occurred while removing the member from the course. Please try again later.',
+      });
+    });
+});
+
 app.get('/certifications', (req, res) => {
   knex('certifications')
     .select('id', 'position')
