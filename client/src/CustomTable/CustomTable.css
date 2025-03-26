@@ -38,6 +38,38 @@
     color: #9EFFA9;
 }
 
-.custom-grid .MuiDataGrid-cell {
+/* .custom-grid .MuiDataGrid-cell {
     background-color: #9EFFA9 ;
+} */
+
+.custom-grid .MuiDataGrid-row:nth-of-type(even) {
+    background-color: #36485E !important; /* Dark grey for even rows */
+
 }
+
+  .custom-grid .MuiDataGrid-row:nth-of-type(odd) {
+    background-color: black !important; /* Dark grey for even rows */
+  }
+
+  .MuiDataGrid-columnHeader {
+    background-color: #36485E !important;  /* Background color */
+    color: #9EFFA9;  /* Text color */
+  }
+
+  .custom-grid .MuiDataGrid-row{
+    color: #9EFFA9;
+  }
+
+  .custom-grid .MuiDataGrid-row .icon-button1 {
+    color: #9EFFA9;
+  }
+
+  .custom-grid .MuiDataGrid-checkboxInput {
+    color: #9EFFA9 !important; /* Change the color of the checkbox */
+  }
+  .custom-grid .Mui-checked {
+    color: #9EFFA9 !important; /* Change color when checked */
+  }
+  .custom-grid{
+    background-color: black;
+  }

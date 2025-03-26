@@ -35,7 +35,7 @@ export default function CustomTable({ arr, api }) {
       width: 100,
       renderCell: (params) => (
         <IconButton onClick={() => handleDelete(params.row.id)} aria-label="Delete" title="Delete">
-        <DeleteForeverIcon />
+        <DeleteForeverIcon sx={{ color: "#9EFFA9"}} />
       </IconButton>
 
       ),
