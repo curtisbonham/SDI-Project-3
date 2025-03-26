@@ -1,88 +1,55 @@
-# Vite-Express-Template
+# Malicious Vanquishers of Evil (MVOE) Scheduling Tool
 
-**Vite-Express-Template** combines **Vite** for fast front-end development with **Express** for back-end API handling. It offers a full-stack setup, where **Vite** handles the development workflow with hot-reloading, while **Express** serves API routes and static files, providing a seamless development experience. This template includes **PostgreSQL** as the database and **Knex.js** as the query builder, making database interactions easier and more flexible.
+**MVOE Scheduling Tool** vanquishes the evil of difficult scheduling. With computing powers combined you are now able quickly and easily inprocess new members to your squadron by adding them to the roster on the **Members** page.
 
-The template also includes automated **testing** with:
+Once a new member is added, you can assign them to their training pipeline for one of their eventual crew positions: **Crew Commander**, **Purveyor of Fine Goods**, **Linguist**, **Cook**, **Deckhand**, **Space Surgeon**, or **Engineer**. You can also check out the **Positions** page to get a description of each crew position.
 
--   **Jest** and **Supertest** for back-end API route testing.
--   **Jest** and **React Testing Library** for front-end component testing.
+To create a new courses, check out the **Courses** page and click the **Add Course** button to put a new course on the timeline. If you need more detail, or detail at a glance, scroll down to the **Courses Information** section. Also in that section, you can delete or edit a course by clicking the respective icons!!
 
-This ensures a robust, reliable, and efficient development process.
+## Problem Statement
+
+Unit schedulers are struggling to deconflict schedules between courses and crew rotations due to the complex and extensive course requirements. Courses range from 2 to 6 months, and the current reliance on three separate systems for tracking availability leads to scheduling errors and delays, impacting mission readiness.
+
+
+Our solution is to create a crew scheduling tool that enables scheduling managers to visualize ongoing and upcoming courses and track availability based on course completion. This tool will allow schedulers to efficiently build crews for different time periods by ensuring individuals meet the necessary course requirements for their assigned positions.
 
 ---
+## Prerequisites
+
+- Node.js (v16 or newer)
+- npm
+- PostgreSQL
+- Git
+- Docker
 
 ## 🚀 Run Locally
 
 ### 📌 Prerequisites
 
-Ensure you have the following installed:
+Ensure you run the following command to install required dependencies:
 
--   [Node.js](https://nodejs.org/) (Recommended: v16+)
--   npm (comes with Node.js)
--   Git (to clone the repository)
--   PostgreSQL installed on your system [PostgreSQL Official Site](https://www.postgresql.org/download/).
+-   npm install
 
 ### 🔹 Clone the repository
 
 ```bash
-  git clone https://github.com/Adam-Brace/Vite-Express-Template
+  git clone https://github.com/curtisbonham/SDI-Project-3
 ```
 
-### 🔹 Navigate to the project directory
+## User Stories/ERD/Wireframe
 
-```bash
-  cd Vite-Express-Template
-```
+[Figma](https://www.figma.com/board/tFoJ139YpyI3SxZGz8hjRo/Project-3?node-id=40-118&t=g3NpV4sDbmqEVQzO-0)
 
-### 🔹 Run the setup script and follow the prompts
+## Screenshots
 
-```bash
-  ./setup.sh
-```
+![Members Tab](./client/public/membersTab.png)
+![Courses Tab](./client/public/CoursesTab.png)
 
-### 🔹 Start the client
+## Authors
 
-```bash
-  npm run dev --prefix ./client
-```
+-   [Curtis Bonham](https://github.com/Adam-Brace)
+-   [Joshua Gore](https://github.com/Adam-Brace)
+-   [Camilo Cueto](https://github.com/Adam-Brace)
+-   [Jackie Luu](https://github.com/Adam-Brace)
+-   [Isaiah Aguirre](https://github.com/Adam-Brace)
 
-### 🔹 Open a new terminal and start the server
-
-```bash
-  npm run dev --prefix ./server
-```
-
----
-
-## 🛠 Common Issues
-
-When running `./setup.sh`, you may encounter one of these errors:
-
-**❌ Error:**
-
--   `bash: ./setup.sh: Permission denied`
-
--   `bash: Unknown command. './setup.sh' exists but is not an executable file.`
-
-**Solution:**
-Run the following command to grant execute permissions to the setup script:
-
-```bash
-  chmod +x setup.sh
-```
-
----
-
-## ✅ Running Tests
-
-To run tests, make sure you are in the server or client directory, then run the following command:
-
-```bash
-  npm run test
-```
-
----
-
-## 👤 Author
-
--   [Adam Brace](https://github.com/Adam-Brace)
