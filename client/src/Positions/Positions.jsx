@@ -24,7 +24,7 @@ function Positions() {
           <div className='details'>
             <h3>Purveyor of Fine Goods:</h3>
             <p>
-                Do you have a passion for luxury items, impeccable taste, and an eye for the finer things in life? We’re seeking a Purveyor of Fine Goods to join our crew and elevate every journey with the finest offerings in hand, whether it's exquisite snacks, rare collectibles, or a selection of artisan knick-knacks. As the go-to source for all things opulent, your role is to provide top-tier service and curate an exclusive experience for crew and passengers alike.
+            The Purveyor will be responsible for curating a selection of luxurious and exclusive items, ranging from exquisite snacks and rare collectibles to unique artisan knick-knacks. Your goal will be to provide exceptional service and create an elevated experience for both crew and passengers, ensuring that every journey is complemented by the finest offerings available.
             </p>
           </div>
         </li>
@@ -35,7 +35,7 @@ function Positions() {
           <div className='details'>
             <h3>Linguist:</h3>
             <p>
-                We are seeking a highly skilled Military Linguist to join our elite crew. The Linguist will serve as the primary expert in language translation, cultural liaison, and communication support across a diverse range of operational environments. This position requires fluency in multiple languages, a keen understanding of military protocols, and the ability to function effectively under pressure, ensuring smooth and secure communication between crew members, allies, and local populations.
+              The Linguist will serve as the primary expert in language translation, cultural liaison, and communication support across a variety of operational environments. This position demands fluency in multiple languages, a strong understanding of military protocols, and the ability to perform effectively under pressure to ensure seamless and secure communication between crew members, allied forces, and local populations.
             </p>
           </div>
         </li>
@@ -46,7 +46,7 @@ function Positions() {
           <div className='details'>
             <h3>Cook:</h3>
             <p>
-                You cook and you know things. We are looking for a skilled Cook to prepare delicious meals according to menu. You will cook dishes that will delight our customers with their taste and timely delivery. An excellent cook must be able to follow instructions in cooking and delivering well-prepared meals. They must be deft in moving around the kitchen and apt in
+              You cook and you know things. The cook's duties are to prepare meals that are both nutritious and delicious, tailored to the unique needs of space travel. In this role, you will be responsible for creating meals according to the onboard menu, ensuring timely delivery and high-quality standards. You will work in a compact and high-tech kitchen environment, where precision, organization, and creativity are key.
             </p>
           </div>
         </li>
@@ -57,7 +57,7 @@ function Positions() {
           <div className='details'>
             <h3>Deckhand:</h3>
             <p>
-                Join our crew as a Deckhand and become an essential part of our operations. Your responsibilities will include maintaining the ship, assisting with cargo handling, and ensuring the safety of all crew members. This role requires physical stamina, a strong work ethic, and a willingness to learn the ropes of life at sea—or in space!
+              The Deckhand is an essential part of our operations. Your responsibilities will include maintaining the ship, assisting with cargo handling, and ensuring the safety of all crew members. This role requires physical stamina, a strong work ethic, and a willingness to learn the ropes of life at sea—or in space!
             </p>
           </div>
         </li>
@@ -68,7 +68,7 @@ function Positions() {
           <div className='details'>
             <h3>Space Surgeon:</h3>
             <p>
-                We are seeking a highly skilled Space Surgeon to provide medical expertise in the unique environment of space. You will be responsible for performing surgeries, managing medical emergencies, and ensuring the health and well-being of the crew. This role demands precision, adaptability, and a deep understanding of space medicine.
+              The Space Surgeon will provide medical expertise in the unique environment of space. In this role, you will be responsible for performing surgeries, managing medical emergencies, and ensuring the overall health and well-being of the crew during the mission. Your expertise in space medicine will be crucial for maintaining crew readiness and addressing medical concerns in a challenging and high-risk environment.
             </p>
           </div>
         </li>

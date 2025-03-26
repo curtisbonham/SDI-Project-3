@@ -6,6 +6,8 @@
   width: 100%;
   height: 100vh;
   box-sizing: border-box;
+
+
 }
 .courses-container h1 {
   grid-column: 2;
@@ -28,8 +30,8 @@
 .add-course-btn {
   height: 50px;
   width: 150px;
-  background-color: #007bff;
-  color: white;
+  background-color: #9EFFA9;
+  color: #36485E;
   font-size: 16px;
   font-weight: bold;
   border: none;
@@ -115,32 +117,44 @@
 
 /* Style the table headers */
 .courses-table th {
-  background-color: #f4f4f4;
+  background-color: #36485E;
   font-weight: bold;
-  border: 1px solid #ddd;
+  border: 1px solid #29252C;
   padding: 10px;
   text-align: center;
 }
 
 /* Style the table rows and cells */
 .courses-table td {
-  border: 1px solid #ddd;
+  border: 1px solid #36485E;
   padding: 10px;
   vertical-align: middle;
 }
 
 /* Add alternating row colors for better readability */
 .courses-table tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background-color: #36485E;
 }
+
 
 /* Add hover effect for rows */
 .courses-table tr:hover {
-  background-color: #f1f1f1;
+  background-color:  #333146;
 }
 
+.courses-table .icon-button1 {
+  color: #9EFFA9;
+}
 
-.courses-table .icon-button:hover {
+.courses-table .icon-button2 {
+  color: #9EFFA9;
+}
+
+.courses-table .icon-button1:hover {
+  color: #b71c1c;
+}
+
+.courses-table .icon-button2:hover {
   color: #b71c1c;
 }
 
@@ -171,6 +185,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: black;
 }
 
 /* Form inside the modal */
@@ -207,4 +222,8 @@
 
 .close-modal-btn:hover {
   background-color: #c9302c;
+}
+
+.icon-button{
+  color: #9EFFA9;
 }

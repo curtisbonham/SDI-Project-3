@@ -6,8 +6,9 @@ import Home from './Home/Home.jsx'
 import Members from './Members/Members.jsx'
 import Courses from './Courses/Courses.jsx'
 import Crews from './Crews/Crews.jsx'
+import Galaga from './Crews/Galaga.jsx'
 import Positions from './Positions/Positions.jsx'
-import DetailsContext from './DetailsContext.jsx'
+import DetailsContext from'./DetailsContext.jsx'
 
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
                 <Route path='/courses' element={<Courses/>}/>
                 <Route path='/crews' element={<Crews/>}/>
                 <Route path='/positions' element={<Positions/>}/>
+                <Route path='/galaga' element={<Galaga />} />
           	</Routes>
         </DetailsContext.Provider>
         </>

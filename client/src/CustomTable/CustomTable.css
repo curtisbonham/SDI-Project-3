@@ -3,3 +3,37 @@
     margin-top: auto;
     margin: 10px;
 }
+
+ .custom-grid{
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 16px;
+  text-align: center;
+  color: #9EFFA9;
+}
+
+.custom-grid th {
+    background-color: #36485E;
+    font-weight: bold;
+    border: 1px solid #29252C;
+    padding: 10px;
+    text-align: center;
+}
+
+.custom-grid td{
+    border: 1px solid #36485E;
+    padding: 10px;
+    vertical-align: middle;
+}
+
+.custom-grid tr:nth-child(even) {
+    background-color: #36485E;
+}
+
+.custom-grid tr:hover {
+    background-color:  #333146;
+}
+
+.custom-grid .icon-button1 {
+    color: #9EFFA9;
+}

@@ -1,15 +1,16 @@
 
-.crew-container{
+
+.game {
     align-items: center;
     align-content: center;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin-top: 100px;
-    height: 800px;
-}
+    left: auto;
+    margin-top: 200px;
+  }
 
-.launch-btn {
+  .launch-btn {
     padding: 15px 30px 15px 50px;
     background: #181c35;
     border-radius: 30px;
@@ -18,9 +19,10 @@
     color: #fff;
     font-weight: 400;
     overflow: hidden;
-    transition: all ease-in-out .5;
+    transition: all ease-in-out .5s;
     border: #ffffff56 solid 1px;
     box-shadow: #9EFFA9 0px 0px 50px -15px;
+    margin-top: 20px;
     align-content: center;
   }
 

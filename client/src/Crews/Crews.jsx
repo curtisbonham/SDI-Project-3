@@ -1,7 +1,7 @@
 
 import CustomTable from "../CustomTable/CustomTable"
 import React, { useEffect, useState } from "react";
-// import './Members.css'
+import './Crews.css'
 
 const Members = () => {
   const [crews, setMembers] = useState([]);
@@ -24,10 +24,10 @@ const Members = () => {
     }
     fetchData()
   }, []);
-  
+
   return (
-    <div className="members-container">
-      <h1>Members Table</h1>
+    <div className="crew-container">
+      <h1>Crew Table</h1>
 
       {loading ? (
         <p>Loading...</p>
@@ -37,14 +37,19 @@ const Members = () => {
           api = {api}
         />
       )}
+        <p>Your Crew is ready to go!</p>
+        <a href="/galaga" className="launch-btn">
+          <span className="icon">
+            <img src="/Fighter.webp" alt="" />
+          </span>
+          <span className="text">Launch</span>
+          <span className="launch"></span>
+        </a>
     </div>
   );
 };
 
 // Add a member to database
-
-
-
 
 
 export default Members;

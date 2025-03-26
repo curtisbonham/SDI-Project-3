@@ -21,9 +21,11 @@ export default function CustomTable({ arr, api }) {
     ...Object.keys(arr[0]).map(key => ({
       field: key,
       headerName: key,
-      editable: key !== 'id' 
+      editable: key !== 'id',
+      flex: 1,
+      getCellClassName: () => "custom-table",
     })),
-  
+
     // Add a custom "Actions" column at the end
     {
       field: 'actions',
@@ -32,14 +34,14 @@ export default function CustomTable({ arr, api }) {
       filterable: false,
       width: 100,
       renderCell: (params) => (
-        <IconButton onClick={() => handleDelete(params.row.id)}>
+        <IconButton onClick={() => handleDelete(params.row.id)} aria-label="Delete" title="Delete">
         <DeleteForeverIcon />
       </IconButton>
 
       ),
     }
   ];
-  
+
 
   // Create the initial state for newRowData, exclude 'id'
   const initialRowData = arr[0] ? Object.keys(arr[0]).reduce((acc, key) => {
@@ -48,7 +50,7 @@ export default function CustomTable({ arr, api }) {
     }
     return acc;
   }, {}) : {};
-  
+
   const [newRowData, setNewRowData] = React.useState(initialRowData);
 
   // Function to update the server when a row is edited
@@ -99,7 +101,7 @@ export default function CustomTable({ arr, api }) {
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this member?")) return;
-  
+
     try {
       await axios.delete(`${api}/${id}`);
       setRows(prevRows => prevRows.filter(row => row.id !== id));
@@ -108,7 +110,7 @@ export default function CustomTable({ arr, api }) {
       alert("Failed to delete member.");
     }
   };
-  
+
   return (
     <>
       {/* Dynamically create input fields for each property excluding 'id' */}
@@ -129,7 +131,8 @@ export default function CustomTable({ arr, api }) {
       </div>
 
       <Paper sx={{ height: 800, width: '100%' }}>
-        <DataGrid
+        <DataGrid className="custom-grid"
+
           getRowId={(row) => row.id}
           processRowUpdate={(updatedRow, originalRow) => {
             // Trigger updateServer on row update
@@ -147,6 +150,7 @@ export default function CustomTable({ arr, api }) {
           pageSizeOptions={[10, 20]}
           checkboxSelection
           sx={{ border: 0 }}
+
         />
       </Paper>
     </>

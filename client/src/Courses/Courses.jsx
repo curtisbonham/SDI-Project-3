@@ -207,10 +207,11 @@ function Courses() {
                   <td>{crs.end_date}</td>
                   <td>{crs.position}</td>
                   <td>
-                    <IconButton onClick={() => handleOpen(crs.id)}>
+                    <IconButton className='icon-button1' onClick={() => handleOpen(crs.id)} aria-label="Delete Course" title="Delete Course">
                       <DeleteForeverIcon />
                     </IconButton>
-                    <IconButton onClick={() => handleEdit(crs.id)}>
+                    <IconButton className='icon-button2' onClick={() => handleEdit(crs.id)} aria-label="Edit Course"
+    title="Edit Course">
                       <EditIcon />
                     </IconButton>
                   </td>

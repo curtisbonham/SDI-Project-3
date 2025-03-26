@@ -6,8 +6,7 @@ function Home({value}) {
 
     return(
         <div className='home-container'>
-          <h1>Home Page</h1>
-
+          <img src ='/Logo-MVOE.png' alt="our illustrious logo"/>
         </div>
     );
 }
