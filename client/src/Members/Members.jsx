@@ -11,8 +11,9 @@ const Members = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${api}/members`);
+        const response = await fetch('http://localhost:3001/members/courses');
         const data = await response.json();
+        console.log("Members with assigned courses:", data); // Debugging log
         setMembers(data);
         setLoading(false);
       } catch (err) {
@@ -21,6 +22,8 @@ const Members = () => {
     };
     fetchData();
   }, []);
+
+  console.log("Members state:", members); // Debugging log
 
   return (
     <div className="members-container">

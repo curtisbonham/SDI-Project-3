@@ -265,9 +265,15 @@ app.delete('/courses/:id', (req, res) => {
 
 app.get('/members/courses', (req, res) => {
   knex('members')
-    .join('intermediate', 'members.id', '=', 'member_id')
-    .join('courses', 'course_id', '=', 'courses.id')
-    .select('*')
+    .leftJoin('intermediate', 'members.id', '=', 'intermediate.member_id')
+    .leftJoin('courses', 'intermediate.course_id', '=', 'courses.id')
+    .select(
+      'members.id as member_id',
+      'members.name as member_name',
+      'members.rank as member_rank',
+      knex.raw('COALESCE(STRING_AGG(courses.course_name, \', \'), \'None\') as assigned_courses')
+    )
+    .groupBy('members.id', 'members.name', 'members.rank') // Include all non-aggregated columns
     .then((data) => {
       res.status(200).json(data);
     })
