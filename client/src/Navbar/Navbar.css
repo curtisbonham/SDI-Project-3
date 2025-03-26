@@ -23,7 +23,8 @@ gap: 20px;
 
 .navBar-container .navBar-btn {
     border: 2px solid #9EFFA9;
-    background-color: #36485E;
+    /* background-color: #36485E; */
+    background: linear-gradient(to right, #333146, #dd2476);
     color: white;
     padding: 0.5rem 1rem;
     /* border: none; */
