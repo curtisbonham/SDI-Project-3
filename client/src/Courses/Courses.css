@@ -21,7 +21,7 @@
   position: relative;
   justify-items: center;
   border: 1px solid #ccc;
-  overflow-x: hidden;
+  overflow-x: auto;
   overflow-y: hidden;
 }
 
@@ -175,7 +175,7 @@
 
 /* Form inside the modal */
 .modal-content form {
-  width: 100%;
+  width: 90%;
   max-width: 400px;
 }
 

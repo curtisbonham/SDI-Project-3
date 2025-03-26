@@ -4,13 +4,13 @@
  */
 exports.up = function(knex) {
   return knex.schema.createTable('intermediate', table => {
-    table.integer('course_id');
+    table.integer('course_id').notNullable();
     table.foreign('course_id').references('id').inTable('courses').onDelete('CASCADE');
 
     table.integer('member_id').nullable();
     table.foreign('member_id').references('id').inTable('members').onDelete('CASCADE')
 
-    table.integer('cert_id');
+    table.integer('cert_id').notNullable();
     table.foreign('cert_id').references('id').inTable('certifications').onDelete('CASCADE');
   });
 };
