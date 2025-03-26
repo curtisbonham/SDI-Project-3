@@ -345,22 +345,27 @@ app.get('/all', (req, res) => {
 
 app.post('/assign-member', (req, res) => {
   const { course_id, member_id, cert_id } = req.body;
+
+  console.log("Request body received by backend:", req.body); // Debugging log
+
   if (!course_id || !member_id || !cert_id) {
     return res.status(400).json({
       message: 'Missing required fields: course_id, member_id, or cert_id.',
     });
   }
+
   knex('intermediate')
     .insert({ course_id, member_id, cert_id })
-    .onConflict(['course_id', 'cert_id'])
-    .merge({ member_id })
+    .onConflict(['course_id', 'cert_id']) // Prevent duplicate entries
+    .merge({ member_id }) // Update member_id if conflict occurs
     .then(() => {
+      console.log("Data inserted/updated successfully:", { course_id, member_id, cert_id }); // Debugging log
       res.status(200).json({
         message: 'Member assigned to course successfully!',
       });
     })
     .catch((err) => {
-      console.error('Database error:', err);
+      console.error('Database error:', err); // Debugging log
       res.status(500).json({
         message: 'An error occurred while assigning the member to the course.',
       });

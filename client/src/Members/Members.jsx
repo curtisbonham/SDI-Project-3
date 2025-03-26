@@ -33,7 +33,7 @@ const Members = () => {
       )}
 
       <h2>Assign Member to Course</h2>
-      <AssignMemberForm api={api} fetchCourses={() => {}} />
+      <AssignMemberForm api={api} />
     </div>
   );
 };

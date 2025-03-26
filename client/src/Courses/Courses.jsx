@@ -80,8 +80,6 @@ function Courses() {
             fetch("http://localhost:3001/courses/").then((res) => res.json()),
             fetch("http://localhost:3001/courses/certs").then((res) => res.json()),
         ]);
-        console.log("Courses Data:", coursesData); // Debugging log
-        console.log("Certifications Data:", certsData);
 
         const mergedData = coursesData.map((course) => {
             const cert = certsData.find((cert) => cert.c_id === course.cert_id);

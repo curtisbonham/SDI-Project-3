@@ -33,15 +33,15 @@ const AssignMemberForm = ({ api, fetchCourses }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const payload = {
+      course_id: parseInt(courseId, 10),
+      member_id: parseInt(memberId, 10),
+      cert_id: parseInt(certId, 10),
+    };
+
+    console.log("Payload being sent to the server:", payload); // Debugging log
+
     try {
-      const payload = {
-        course_id: courseId,
-        member_id: memberId,
-        cert_id: certId,
-      };
-
-      console.log("Payload being sent to the server:", payload); // Debugging log
-
       const response = await fetch(`${api}/assign-member`, {
         method: "POST",
         headers: {
@@ -50,13 +50,12 @@ const AssignMemberForm = ({ api, fetchCourses }) => {
         body: JSON.stringify(payload),
       });
 
-      console.log("Response status:", response.status);
+      console.log("Response status:", response.status); // Debugging log
 
       if (response.ok) {
         const responseData = await response.json();
-        console.log("Response data from server:", responseData); //Debugging log
+        console.log("Response data from server:", responseData); // Debugging log
         alert("Member assigned to course successfully!");
-        fetchCourses();
       } else {
         const errorData = await response.json();
         console.error("Error response from server:", errorData); // Debugging log
