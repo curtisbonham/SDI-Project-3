@@ -13,7 +13,7 @@ function Positions() {
           <div className='details'>
             <h3>Crew Commander<span id="colon">:</span></h3>
             <p>
-                Lead our team as the Crew Commander, overseeing all operations and ensuring the success of every mission. This role requires exceptional leadership skills, strategic thinking, and the ability to make critical decisions under pressure. As the backbone of the crew, you will inspire and guide your team to achieve greatness.
+                Lead the team as the Crew Commander, overseeing all operations and ensuring the success of every mission. This role requires exceptional leadership skills, strategic thinking, and the ability to make critical decisions under pressure. As the backbone of the crew, you will inspire and guide your team to achieve greatness.
             </p>
           </div>
         </li>
@@ -24,7 +24,7 @@ function Positions() {
           <div className='details'>
             <h3>Purveyor of Fine Goods:</h3>
             <p>
-            The Purveyor will be responsible for curating a selection of luxurious and exclusive items, ranging from exquisite snacks and rare collectibles to unique artisan knick-knacks. Your goal will be to provide exceptional service and create an elevated experience for both crew and passengers, ensuring that every journey is complemented by the finest offerings available.
+              The Purveyor of Fine Goods will be responsible for curating a selection of luxurious and exclusive items, ranging from exquisite snacks and rare collectibles to unique artisan knick-knacks. Your goal will be to provide exceptional service and create an elevated experience for both crew and passengers, ensuring that every journey is complemented by the finest offerings available.
             </p>
           </div>
         </li>

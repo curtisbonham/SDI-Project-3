@@ -13,7 +13,7 @@ Unit schedulers are struggling to deconflict schedules between courses and crew 
 
 Our solution is to create a crew scheduling tool that enables scheduling managers to visualize ongoing and upcoming courses and track availability based on course completion. This tool will allow schedulers to efficiently build crews for different time periods by ensuring individuals meet the necessary course requirements for their assigned positions.
 
----##  Run Locally
+##  Run Locally
 
 ### 📦 Install dependencies
 
@@ -58,7 +58,7 @@ npm run dev --prefix ./client
 npm run dev --prefix ./server
 ```
 
----### 1. Clone the Repository
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/curtisbonham/SDI-Project-3.git
@@ -154,7 +154,7 @@ SDI-Project-3/
 
 ## Authors
 
-   [Curtis Bonham](https://github.com/Adam-Brace)
+-   [Curtis Bonham](https://github.com/Adam-Brace)
 -   [Joshua Gore](https://github.com/Adam-Brace)
 -   [Camilo Cueto](https://github.com/Adam-Brace)
 -   [Jackie Luu](https://github.com/Adam-Brace)

@@ -34,6 +34,10 @@
     background-color:  #333146;
 }
 
-.custom-grid .icon-button1 {
+.custom-grid .MuiDataGrid-cell .icon-button1 {
     color: #9EFFA9;
+}
+
+.custom-grid .MuiDataGrid-cell {
+    background-color: #9EFFA9 ;
 }
